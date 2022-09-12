@@ -1,0 +1,62 @@
+{%
+  set classes = [
+    'node',
+    'node-detail',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+<!-- Start Display article for teaser page -->
+{% if teaser == true %} 
+  <article{{ attributes.addClass(classes) }}>
+    <div class="post-block">
+      
+      <div class="post-thumbnail">
+          {{ content.field_image }}
+      </div>
+
+      <div class="post-content">
+        {{ title_prefix }}
+           <h3{{ title_attributes.addClass('post-title') }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
+        {{ title_suffix }}         
+        <div class="post-meta">
+          <span class="post-created"> {{date }} </span> /
+          <span class="post-comment"> 
+            <a href="{{url}}/#comments">{{ comment_count }} Comments</a>
+          </span>
+        </div>
+        <div class="post-description">
+          {{ content.body }}
+        </div>
+      </div>
+
+    </div>
+  </article>  
+
+<!-- End Display article for teaser page -->
+{% else %}
+<!-- Start Display article for detail page -->
+
+  <article{{ attributes.addClass(classes) }}>
+    <div class="single-gallery" id="single-gallery">
+      <div class="post-content">
+        <div id="gva-pajax-get-content"><div class="gallery-images">{{content.field_gallery_images}}</div></div>
+        <div class="gallery-body"> 
+          {{ title_prefix }}
+             <h1{{ title_attributes.addClass('post-title') }}>{{ label }}</h1>
+          {{ title_suffix }}
+          <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+            {{ content|without('field_gallery_image', 'comment', 'links') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+<!-- End Display article for detail page -->
+{% endif %}

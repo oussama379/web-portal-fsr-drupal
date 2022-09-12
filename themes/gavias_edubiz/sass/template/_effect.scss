@@ -1,0 +1,119 @@
+/**
+ * jPreloader
+ */
+@media(min-width: 780px){
+  #jpreContent {
+    display: none!important;
+  }
+}
+@media(min-width: 780px){
+  .js-preloader .body-page {
+    opacity: 1!important;
+  }
+  .js-preloader.preloader-done .body-page {
+    opacity: 1!important;
+  }
+  #jpreContent {
+    display: block!important;
+  }
+  #jpreLoader {
+    height: 4px;
+    width: 100%;
+    top: 0 !important;
+  }
+  #jpreOverlay { 
+    background-color: transparent;
+    height: auto !important;
+    top: 0 !important;
+    position: absolute !important;
+  }
+  #jpreSlide {
+    text-align: center;
+    top: 0!important;
+  }
+  #jpreSlide #jpreContent {
+    display: block;
+    position: relative;
+    margin-bottom: 40px;
+  }
+  .js-preloader #jpreOverlay {
+    background-color: none;
+    height: 10px !important;
+    position: fixed !important;
+  }
+  .js-preloader #jpreLoader {
+    top: 0!important;
+    height: 10px;
+    margin-top: -5px;
+    z-index: 9999999!important;
+  }
+  .js-preloader #jprePercentage {
+    text-align: center;
+    display: none!important;
+  }
+  #jpreBar {
+    z-index: 2;
+    background-color: $theme-color;
+  }
+  #jpreButton,
+  #jprePercentage {
+    display: none !important;
+  }
+  #jprePercentage {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 30px;
+  }
+}
+
+.preloader-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  height: 60px; 
+  text-align: center;
+}
+
+@-webkit-keyframes sonarEffect {
+  0% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.5;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 0 10px 10px $theme-color, 0 0 0 10px rgba(255,255,255,0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 0 10px 10px $theme-color, 0 0 0 10px rgba(255,255,255,0.5);
+    -webkit-transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@-moz-keyframes sonarEffect {
+  0% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.5;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 0 10px 10px $theme-color, 0 0 0 10px rgba(255,255,255,0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 0 10px 10px $theme-color, 0 0 0 10px rgba(255,255,255,0.5);
+    -moz-transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes sonarEffect {
+  0% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.5;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 0 10px 10px $theme-color, 0 0 0 10px rgba(255,255,255,0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 0 10px 10px $theme-color, 0 0 0 10px rgba(255,255,255,0.5);
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,90 @@
+<div class="gva-googlemap">
+   <div id="map_canvas_gva_01" class="map_canvas" style="width:100%;height:500px;"></div>
+   <div class="description">
+     <div class="makers">
+      {% set i = 1 %}
+        {% for row in rows %}
+            {% if i % 3 == 1 %}<div class="row">{% endif %}
+               {{ row.content }} 
+            {% if i % 3 == 0 or i == rows|length %}</div>{% endif %}
+            {% set i = i + 1 %}   
+         {% endfor %}
+      </div>
+   </div>
+</div>
+
+{% set style_map = '[{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#d3d3d3"}]},{"featureType":"transit","stylers":[{"color":"#808080"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#b3b3b3"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"weight":1.8}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#d7d7d7"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ebebeb"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#a7a7a7"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#efefef"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#696969"}]},{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"visibility":"on"},{"color":"#737373"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#d6d6d6"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"color":"#dadada"}]}]' %}
+  <script type="text/javascript">
+ 
+  jQuery(document).ready(function($){
+    var location_data = [];
+    var i = 0;
+    $('.maker-item').each(function(){
+      var location_item = [];
+      location_item['id'] = $(this).data('id');
+      var lat = $(this).data('lat');
+      if(lat){
+          lat = lat.split(",");
+          location_item['latLng'] = [lat[0], lat[1]];
+      }
+      location_item['data'] = '';
+      location_item['options'] = {};
+      location_data[i] = location_item;
+      i++;
+    }); 
+    $('#map_canvas_gva_01').gmap3({
+      map:{
+        options:{
+          "draggable": true,
+          "mapTypeControl": true,
+          "mapTypeId": google.maps.MapTypeId.ROADMAP,
+          "scrollwheel": false,
+          "panControl": true,
+          "rotateControl": false,
+          "scaleControl": true,
+          "streetViewControl": true,
+          "zoomControl": true,
+          "center": location_data[0]['latLng'],
+          "zoom": 12,
+          "styles": {{ style_map|raw }}
+         }
+       },
+       marker:{
+         values: location_data,
+         options:{
+           draggable: false
+         },
+         events:{
+           click: function(marker, event, context){
+             var id = context.id;
+             var content = $('div[data-id='+id+'] .marker-hidden-content').html();
+               var map = $(this).gmap3("get"),
+                 infowindow = $(this).gmap3({get:{name:"infowindow"}});
+               if (infowindow){
+                 infowindow.open(map, marker);
+                 infowindow.setContent(content);
+               } else {
+                 $(this).gmap3({
+                   infowindow:{
+                     anchor:marker, 
+                     options:{content: content}
+                   }
+                 });
+               }
+           }
+         }
+       }
+    });
+      
+    var map = $('#map_canvas_gva_01').gmap3("get");
+    $(".location-item").click(function(){
+      $('.location-item .location-item-inner').removeClass('active');
+      $(this).find('.location-item-inner').first().addClass('active');
+      var id = $(this).data('id');
+      var marker = $('#map_canvas_gva_01').gmap3({ get: { id: id } });
+      new google.maps.event.trigger(marker, 'click');
+      map.setCenter(marker.getPosition());
+    });
+
+  });
+  </script>

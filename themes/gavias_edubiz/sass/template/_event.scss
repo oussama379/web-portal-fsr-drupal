@@ -1,0 +1,102 @@
+.event-block{
+   .event-image{
+      position: relative;
+      .date{
+         position: absolute;
+         top: 15px;
+         right: 10px;
+         overflow: hidden;
+         padding: 5px 10px;
+         background: $theme-color;
+         color: $white;
+         .icon{
+            margin-right: 5px;
+         }
+      }
+   }
+   .event-content{
+      background: $white;
+      padding: 15px 20px;
+      border: 1px solid $border-color;
+      border-top: 0;
+      .event-info{
+         .title{
+            font-size: 18px;
+            line-height: 28px;
+            font-family: $font-second;
+            display: block;
+            margin-bottom: 10px;
+         }
+         .address{
+            font-size: 12px;
+            font-family: $font-second;
+            font-style: italic;
+            letter-spacing: 1px;
+            i{
+              margin-right: 5px;
+            }
+         }
+         .body{
+            margin-top: 10px;
+            line-height: 28px;
+         }
+      }
+   }
+}
+.event-block-list{
+   .event-date{
+      @include size(110px, auto);
+      float: left;
+      background: $theme-color;
+      color: $white;
+      padding: 12px 10px;
+      span{
+         display: block;
+         &.day{
+            font-size: 30px;
+            font-family: $font-second;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            line-height: 1;
+            margin-bottom: 3px;
+            padding-bottom: 3px;
+         }
+      }
+   }
+   .event-title{
+      a{
+         font-weight: 600;
+         font-family: $font-second;
+         font-size: 14px;
+         display: inline-block;
+         line-height: 24px;
+      }
+   }
+   .event-address{
+      font-size: 14px;
+      i{
+         font-size: 16px;
+         color: $theme-color;
+      }
+   }
+   .event-content{
+      padding-left: 125px;
+   }
+}
+
+.event-full{
+  .event-info{
+    background: #f5f5f5;
+    padding: 30px;
+    font-size: 16px;
+    font-family: $font-second;
+    .date, .address{
+      > *{
+        float: left;
+      }
+      i{
+        margin-right: 10px;
+        margin-top: 6px;
+      }
+    }
+  }
+}

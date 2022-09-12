@@ -1,0 +1,185 @@
+<?php
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+function gavias_hook_themer_makeid($length = 5){
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+    $randomString .= $characters[rand(0, strlen($characters) - 1)];
+  }
+  return $randomString;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gavias_hook_themer_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface &$form_state, $form_id) {
+  unset($form['gavias_blockbuilder_layout']);
+  unset($form['gva_shortcode']);
+
+  $form['gva_node_settings'] = array(
+    '#type'   => 'details',
+    '#title'  => t('Node Settings'),
+    '#group'  => 'advanced',
+    '#open'   => TRUE,
+    '#access' => TRUE,
+    '#attributes' => array('class' => array('node-class-form')),
+  );
+
+  $path = \Drupal::service('path.current')->getPath();
+  $path_args = explode('/', $path);
+  $node_id = 0;
+  if (isset($path_args[1]) && isset($path_args[2]) && ($path_args[1] == 'node') && (is_numeric($path_args[2]))) {
+    $node = \Drupal\node\Entity\Node::load($path_args[2]);
+    if($node->id()){
+      $node_id = $node->id();
+    }
+  }
+
+  $form['gva_node_class']['#group']           = 'gva_node_settings';
+  $form['gva_node_layout']['#group']          = 'gva_node_settings';
+  $form['gva_header']['#group']               = 'gva_node_settings';
+  $form['gva_box_layout']['#group']           = 'gva_node_settings';
+  $form['gva_breadcrumb']['#group']           = 'gva_node_settings';
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function gavias_hook_themer_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'node') {
+
+    $fields['gva_node_layout'] = BaseFieldDefinition::create('list_string')
+      ->setSetting('allowed_values', [
+          'fw' => 'Fullwith no sidebar (use for block builder)',
+          'fw_sidebar' => 'Fullwidth width sidebar',
+          'container_sidebar' => 'Container width sidebar',
+          'container_no_sidebar' => 'Container no sidebar'
+        ])
+      ->setLabel(t('Layout settings'))
+      ->setDisplayOptions('form', array(
+        'type'    => 'options_select',
+        'weight'  => 1,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    $fields['gva_breadcrumb'] = BaseFieldDefinition::create('list_string')
+      ->setSetting('allowed_values', [
+          'enable'    => 'Enable',
+          'disable'   => 'Disable'
+        ])
+      ->setLabel(t('Breadcrumb settings'))
+      ->setDisplayOptions('form', array(
+        'type'    => 'options_select',
+        'weight'  => 2,
+      ))
+      ->setDisplayConfigurable('form', TRUE);  
+
+    $fields['gva_header'] = BaseFieldDefinition::create('list_string')
+      ->setSetting('allowed_values', [
+              'header'    => t('Header default'),
+              'header-1'  => t('Header v1'),  
+              'header-2'  => t('Header v2'),
+              'header-3'  => t('Header v3'),
+              'header-4'  => t('Header v4')
+              ])
+      ->setLabel(t('Header'))
+      ->setDisplayOptions('form', array(
+        'type'    => 'options_select',
+        'weight'  => 3,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+
+    $fields['gva_node_class'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('CSS class(es)'))
+      ->setDisplayOptions('form', array(
+        'type'    => 'string_textfield',
+        'weight'  => 4,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+    
+    $fields['gva_box_layout'] = BaseFieldDefinition::create('list_string')
+      ->setSetting('allowed_values', [
+          'boxed' => t('Boxed'),
+          'Wide'  => t('Wide')
+        ])
+      ->setLabel(t('Layout Box'))
+      ->setDisplayOptions('form', array(
+        'type'    => 'options_select',
+        'weight'  => 5,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function gavias_hook_themer_preprocess_html(&$variables) {
+  $path = \Drupal::service('path.current')->getPath();
+  $path_args = explode('/', $path);
+  if (isset($path_args[1]) && isset($path_args[2]) && ($path_args[1] == 'node') && (is_numeric($path_args[2]))) {
+    $node = \Drupal\node\Entity\Node::load($path_args[2]);
+    if($node && $node->hasField('gva_node_class')){
+      $class_body = $node->get('gva_node_class')->getValue();
+      if(isset($class_body) && !empty($class_body[0])) {
+          $variables['attributes']['class'][] = $class_body[0]['value'];
+      }
+    }
+    if($node && $node->hasField('gva_box_layout')){
+      $box_layout = $node->get('gva_box_layout')->getValue();
+      if(isset($box_layout) && !empty($box_layout[0])) {
+          $variables['attributes']['class'][] = $box_layout[0]['value'];
+      }
+    }
+  }
+}
+
+function gavias_hook_themer_preprocess_page(&$variables) {
+  $path = \Drupal::service('path.current')->getPath();
+  $path_args = explode('/', $path);
+  if ($node = \Drupal::request()->attributes->get('node')) {
+      if(is_object($node)){
+      $variables['gva_header'] = '';
+      if($node){
+        
+        if($node->hasField('gva_header')){
+          $gva_header = $node->get('gva_header')->value;
+          if($gva_header) {
+            $variables['gva_header'] = $gva_header;
+          }
+        }
+
+        if($node->hasField('gva_breadcrumb')){
+          $gva_breadcrumb = $node->get('gva_breadcrumb')->value;
+          if($gva_breadcrumb && $gva_breadcrumb == 'disable'){
+            if(isset($variables['page']['breadcrumbs'])) unset($variables['page']['breadcrumbs']);
+          }
+        }
+      }  
+    }
+  }
+}
+
+function gavias_hook_themer_sliderlayer_styles_alter(&$variables){
+  $variables['data'] = array(
+    ''        => 'None',
+    'slide-style-1' => 'Style #1: font-size 84px, font-family-second',
+    'slide-style-2' => 'Style #2: font-size 48px, font-family-second',
+    'slide-style-3' => 'Style #3: font-size 60px, font-family-second',
+    'slide-style-4' => 'Style #4: font-size 20px, font-family-second, background',
+    'slide-style-5' => 'Style #5: font-size 20px, font-family-base',
+    'btn-slide'     => 'Style #6: Button theme',
+    'btn-slide-white'   => 'Style #7: Button white',
+    'btn-slide-line'    => 'Style #8: Button Border',
+  );
+}
+
+function gavias_hook_themer_update_projects_alter(&$projects){
+  unset($projects['gavias_buildpro_themer']);
+}

@@ -1,0 +1,5 @@
+field_collection.overview_field_collections:
+  title: 'Field collections'
+  parent: system.admin_structure
+  description: 'Manage field collections.'
+  route_name: field_collection.overview_field_collections

@@ -1,0 +1,7 @@
+administer gavias_customize:
+  title: 'Administer Gavias Customize'
+  description: 'Administer Gavias Customize.'
+
+administer gavias_customize preview:
+   title: 'Administer Gavias Customize Preview'
+   description: 'Administer Gavias Customize Preview.'

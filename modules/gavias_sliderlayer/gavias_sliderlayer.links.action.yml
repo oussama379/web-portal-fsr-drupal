@@ -1,0 +1,16 @@
+gavias_sliderlayer_add_group:
+   route_name: gavias_sl_group.admin.add
+   title: 'Add Group Slider Layer'
+   route_parameters:
+        sid: '0'
+   appears_on:
+      - gavias_sl_group.admin
+
+gavias_sliderlayer_add_slider:
+   route_name: gavias_sl_sliders.admin.form
+   title: 'Add Slider Layer'
+   route_parameters:
+        sid: '0'
+   appears_on:
+      - gavias_sl_sliders.admin.list
+

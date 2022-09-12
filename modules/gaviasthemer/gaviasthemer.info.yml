@@ -1,0 +1,10 @@
+name: Gavias Themer
+type: module
+description: Gavias Themer module.
+# core: 8.x
+package: gavias
+# Information added by Drupal.org packaging script on 2015-08-14
+version: '8.x-1.0'
+core: '8.x'
+project: 'Gaviasthemer'
+datestamp: 1439548441

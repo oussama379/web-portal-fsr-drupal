@@ -1,0 +1,146 @@
+<?php
+use Drupal\Core\Field;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\taxonomy\Entity\Term;
+/**
+ * Implements hook_theme().
+ */
+function gavias_views_magazine_theme() {
+  return [
+    'views_view_mlayout_1' => [
+      'variables' => [],
+    ],
+    'views_view_mlayout_2' => [
+      'variables' => [],
+    ]
+  ];
+}
+
+/**
+ * Default template: views_view_mlayout_1.html.twig.
+ */
+function template_preprocess_views_view_mlayout_1(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  $variables['attributes']['class'][] = 'gva-view-mlayout-1';
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  unset($settings['row_class']);
+  unset($settings['default_row_class']);
+  unset($settings['el_class']);
+  unset($settings['el_id']);
+  template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Default template: views_view_mlayout_2.html.twig.
+ */
+function template_preprocess_views_view_mlayout_2(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  $variables['attributes']['class'][] = 'gva-view-mlayout-2';
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Default template: views_view_mlayout_3.html.twig.
+ */
+function template_preprocess_views_view_mlayout_3(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  //print_r($settings);die();
+  $variables['attributes']['class'][] = 'gva-view-mlayout-3';
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  $variables['columns'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  $carousel_attrs = "";
+  $settings_carousel = array();
+  $settings_carousel['items'] = isset($settings['items']) && $settings['items'] ? $settings['items'] : 3;
+  $settings_carousel['items_lg'] = isset($settings['items_lg']) && $settings['items_lg'] ? $settings['items_lg'] : 3;
+  $settings_carousel['items_md'] = isset($settings['items_md']) && $settings['items_md'] ? $settings['items_md'] : 3;
+  $settings_carousel['items_sm'] = isset($settings['items_sm']) && $settings['items_sm'] ? $settings['items_sm'] : 2;
+  $settings_carousel['items_xs'] = isset($settings['items_xs']) && $settings['items_xs'] ? $settings['items_xs'] : 2;
+  $settings_carousel['navigation'] = isset($settings['navigation']) && $settings['navigation'] ? 1 : 0;
+  $settings_carousel['loop'] = isset($settings['loop']) && $settings['loop'] ? 1 : 0;
+  $settings_carousel['speed'] = isset($settings['speed']) && $settings['speed'] ? $settings['speed'] : 200;
+  $settings_carousel['auto_play'] = isset($settings['auto_play']) && $settings['auto_play'] ? 1 : 0;
+  $settings_carousel['auto_play_speed'] = isset($settings['auto_play_speed']) && $settings['auto_play_speed'] ? $settings['auto_play_speed'] : 1000;
+  $settings_carousel['auto_play_timeout'] = isset($settings['auto_play_timeout']) && $settings['auto_play_timeout'] ? $settings['auto_play_timeout'] : 3000;
+  $settings_carousel['auto_play_hover'] = isset($settings['auto_play_hover']) && $settings['auto_play_hover'] ? 1 : 0;
+  $settings_carousel['rewind_nav'] = isset($settings['rewind_nav']) && $settings['rewind_nav'] ? 1 : 0;
+  $settings_carousel['pagination'] = isset($settings['pagination']) && $settings['pagination'] ? 1 : 0;
+  $settings_carousel['mouse_drag'] = isset($settings['mouse_drag']) && $settings['mouse_drag'] ? 1 : 0;
+  $settings_carousel['touch_drag'] = isset($settings['touch_drag']) && $settings['touch_drag'] ? 1 : 0;
+  foreach ($settings_carousel as $key => $value) {
+    $carousel_attrs .= " data-{$key}={$value}";
+  }
+  $variables['carousel_attrs'] = $carousel_attrs;
+  template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Default template: views_view_mlayout_4.html.twig.
+ */
+function template_preprocess_views_view_mlayout_4(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  $variables['attributes']['class'][] = 'gva-view-mlayout-4';
+  $settings_grid['items_lg'] = isset($settings['items_lg']) && $settings['items_lg'] ? $settings['items_lg'] : 3;
+  $settings_grid['items_md'] = isset($settings['items_md']) && $settings['items_md'] ? $settings['items_md'] : 3;
+  $settings_grid['items_sm'] = isset($settings['items_sm']) && $settings['items_sm'] ? $settings['items_sm'] : 2;
+  $settings_grid['items_xs'] = isset($settings['items_xs']) && $settings['items_xs'] ? $settings['items_xs'] : 2;
+  $variables['class_grid'] = $settings_grid;
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Default template: views_view_mlayout_5.html.twig.
+ */
+function template_preprocess_views_view_mlayout_5(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  $variables['attributes']['class'][] = 'gva-view-grid';
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  $settings_grid['items_lg'] = isset($settings['items_lg']) && $settings['items_lg'] ? $settings['items_lg'] : 3;
+  $settings_grid['items_md'] = isset($settings['items_md']) && $settings['items_md'] ? $settings['items_md'] : 3;
+  $settings_grid['items_sm'] = isset($settings['items_sm']) && $settings['items_sm'] ? $settings['items_sm'] : 2;
+  $settings_grid['items_xs'] = isset($settings['items_xs']) && $settings['items_xs'] ? $settings['items_xs'] : 2;
+  $variables['class_grid'] = $settings_grid;
+  template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Default template: views_view_mlayout_6.html.twig.
+ */
+function template_preprocess_views_view_mlayout_6(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  $variables['attributes']['class'][] = 'gva-view-mlayout-6';
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  $variables['number_post_column'] = isset($settings['number_post_column']) && $settings['number_post_column'] ? $settings['number_post_column'] : 4;
+  template_preprocess_views_view_unformatted($variables);
+}
+
+
+/**
+ * Implements hook_help().
+ */
+function gavias_views_magazine_help($route_name, RouteMatchInterface $route_match) {
+ 
+}
+
+function gavias_views_magazine_random_id($length = 5){
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, strlen($characters) - 1)];
+  }
+  return $randomString;
+}

@@ -1,0 +1,89 @@
+{%
+  set classes = [
+    'node',
+    'node-detail',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+<!-- Start Display article for teaser page -->
+{% if teaser == true %} 
+  <article{{ attributes.addClass(classes) }}>
+    <div class="event-block">
+      <div class="event-image">
+        {{ content.field_event_image }}
+        <div class="date"> 
+          <span class="icon"><i class="gv-icon-1103"></i></span><span class="day">{{ node.field_event_start.value|date('j') }}</span>-<span class="month">{{ node.field_event_start.value|date('F') }}</span>
+        </div>
+      </div>
+      <div class="event-content">  
+        <div class="event-info">
+          <div class="title"><a href="{{ url }}" rel="bookmark">{{ label }}</a></div>
+          {% if content.field_event_address %}
+            <div class="address"><i class="fa fa-map-marker"></i>{{ node.field_event_address.value }}</div>
+          {% endif %}
+          <div class="body">{{ content.body }}</div>
+        </div>
+      </div>  
+    </div>   
+  </article>  
+
+<!-- End Display article for teaser page -->
+{% else %}
+<!-- Start Display article for detail page -->
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="post-block event-full">
+    <div class="post-thumbnail">
+      {{ content.field_event_image }}
+      <div class="event-info clearfix">
+        <div class="date clearfix"><i class="fa fa-calendar"></i>{{ content.field_event_start }} <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o"></i></span> {{ content.field_event_time }}</div>
+        <div class="address clearfix"><i class="fa fa-map-marker"></i>{{ content.field_event_address }}</div>
+      </div>
+    </div>
+    <div class="post-content">
+      {{ title_prefix }}
+         <h1{{ title_attributes.addClass('post-title') }}>{{ label }}</h1>
+      {{ title_suffix }}         
+      <div class="post-meta">
+        <span class="post-created"> {{date }} </span> /
+        <span class="post-comment"> 
+          <a href="{{url}}/#comments">{{ comment_count }} Comments</a>
+        </span>
+      </div>
+      
+      {% if display_submitted %}
+        <div class="node__meta hidden">
+          {{ author_picture }}
+          <span{{ author_attributes }}>
+            {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+          </span>
+          {{ metadata }}
+        </div>
+      {% endif %}
+
+      <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+        {{ content|without('field_event_image', 'field_event_start', 'field_event_address', 'field_event_time','field_event_map', 'comment') }}
+      </div>
+      <div class="map margin-top-30">
+        {{ content.field_event_map|raw }}
+      </div>
+      {% if content.comment %}
+        <div id="node-single-comment">
+          {{ content.comment }}
+        </div>
+      {% endif %} 
+
+    </div>
+
+  </div>
+
+</article>
+
+<!-- End Display article for detail page -->
+{% endif %}

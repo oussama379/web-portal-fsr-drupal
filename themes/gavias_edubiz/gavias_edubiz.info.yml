@@ -1,0 +1,44 @@
+name: Gavias Edubiz
+type: theme
+description: 'A flexible, recolorable theme with many regions and a responsive, mobile-first layout.'
+package: gaviasthemes
+libraries:
+  - gavias_edubiz/global-styling
+  - core/jquery
+
+libraries-override:
+  views_infinite_scroll/views-infinite-scroll: gavias_edubiz/views-infinite-scroll
+
+regions:
+  drupal_message: 'Message for drupal'
+  offcanvas: 'After Offcanvas'
+  topbar: 'Topbar'
+  branding: 'Branding'
+  search: 'Search'
+  header_right: 'Header Right'
+  breadcrumbs: 'Breadcrumbs'
+  help: 'Help'
+  main_menu: 'Main menu'
+  slideshow_content: 'Slideshow'
+  fw_before_content: 'Before Full Width Content'
+  content_top: 'Content Top'
+  content: 'Main content'
+  content_bottom: 'Content Bottom'
+  sidebar_left: 'Sidebar Left'
+  sidebar_right: 'Sidebar Right'
+  after_content: 'After Content'
+  highlighted: 'Highlighted'
+  fw_after_content: 'After Full Width Content'
+  before_footer: 'Before Footer'
+  footer_first: 'Footer Fisrt'
+  footer_second: 'Footer Second'
+  footer_third: 'Footer Third'
+  footer_four: 'Footer Four'
+  after_footer: 'After Footer'
+  lessons: 'Lessons'
+  copyright: 'Copyright'
+  other: 'Other'
+
+version: '8.x'
+core: '8.x'
+project: 'drupal'

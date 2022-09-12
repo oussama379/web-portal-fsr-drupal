@@ -1,0 +1,4 @@
+administer field_collection_item fields:
+  title: 'Administer field collections'
+  description: 'Create and delete fields on field collections.'
+  restrict access: true

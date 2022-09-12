@@ -1,0 +1,34 @@
+{% if attributes -%}
+   <div{{ attributes }}>
+{% endif %}
+   
+  {% if title %}
+    <h3>{{ title }}</h3>
+  {% endif %}
+
+  {% set i = 0 %}
+    {% set j = 0 %}
+  {% for row in rows %}
+    {% set i = i + 1 %}
+    {% set j = j + 1 %}
+    {% if i == 1 %}<div class="big-row row">{% endif %}
+      {% if i == 1 %}
+        <div class="item index-{{i}} first-item col-md-6 col-sm-12 col-xs-12">
+          <div{{ row.attributes }}>{{ row.content|raw }}</div>
+        </div>
+      {% else %}
+        {% if i == 2 %} <div class="small-items col-md-6 col-sm-12 col-xs-12">{% endif %}
+          {% if i % 2 == 0 %}<div class="row">{% endif %}
+            <div class="item index-{{i}} col-sm-6 col-xs-12">
+              <div{{ row.attributes }}>{{ row.content|raw }}</div>
+            </div>
+          {% if i % 2 == 1 or j == rows|length %} </div> {% endif %}
+        {% if i == 5 or j == rows|length %} </div>{% endif %}    
+      {% endif %}
+    {% if i == 5 or j == rows|length %}</div>{% endif %}
+    {% if i == 5 %}{% set i = 0 %}{% endif %}
+  {% endfor %}
+
+{% if attributes -%}
+    </div>
+{% endif %}

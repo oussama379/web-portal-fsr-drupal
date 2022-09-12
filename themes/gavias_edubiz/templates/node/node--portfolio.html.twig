@@ -1,0 +1,91 @@
+{%
+  set classes = [
+    'node',
+    'node-detail',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+<!-- Start Display article for teaser page -->
+
+{% if view_mode == 'teaser' %}
+
+<div class="portfolio-v2 isotope-item post-block portfolio-single  node--view-mode-full node--type-portfolio">      
+   <div class="portfolio-content">
+      <div class="post-thumbnail">{{ content.field_portfolio_images }}</div>
+      <div class="content-inner"> <div class="title"> <a href="{{ url }}" rel="bookmark">{{ label }}</a> </div><div class="category">{{content.field_portfolio_tags}}</div> </div>    
+   </div>
+</div>
+
+{% else %}
+<!-- Start Display article for detail page -->
+{% set xcol = "col-md-12 col-sm-12 col-xs-12"  %}
+{% if informations %}
+  {% set xcol = "col-md-6 col-sm-12 col-xs-12"  %}
+{% endif %} 
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="post-block portfolio-single">
+    
+    <div class="row">
+      <div class="{{xcol}}"> 
+        <div class="post-thumbnail">
+          {% if content.field_portfolio_images %}
+            {{ content.field_portfolio_images }} 
+          {% endif %}
+        </div>
+      </div>
+      {% if informations %}
+      <div class="{{xcol}}">
+        <div class="portfolio-informations">
+          {{ informations|raw }}
+        </div>
+      </div>  
+      {% endif %}
+    </div> 
+     
+    <div class="post-content">
+      <span class="post-categories">{{ content.field_portfolio_tags }}</span>
+      {{ title_prefix }}
+         <h1{{ title_attributes.addClass('post-title') }}>{{ label }}</h1>
+      {{ title_suffix }}         
+      <div class="post-meta">
+        <span class="post-created"> {{date }} </span> /
+        <span class="post-comment"> 
+          <a href="{{url}}/#comments">{{ comment_count }} Comments</a>
+        </span>
+      </div>
+      
+      {% if display_submitted %}
+        <div class="node__meta hidden">
+          {{ author_picture }}
+          <span{{ author_attributes }}>
+            {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+          </span>
+          {{ metadata }}
+        </div>
+      {% endif %}
+
+      <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+        {{ content|without('field_portfolio_images','field_portfolio_tags', 'field_portfolio_information', 'comment') }}
+      </div>
+
+      {% if content.comment %}
+        <div id="node-single-comment">
+          {{ content.comment }}
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</article>
+
+<!-- End Display article for detail page -->
+{% endif %}

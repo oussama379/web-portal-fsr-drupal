@@ -1,0 +1,135 @@
+{%
+  set classes = [
+    'node',
+    'node-detail',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+<!-- Start Display course for teaser page -->
+{% if teaser == true %} 
+  <div class="course-block">
+    <div class="course-thumbnail">
+      {{ content.field_course_image }}
+    </div>
+    <div class="course-content">
+      {{ title_prefix }}
+         <h3{{ title_attributes.addClass('course-title') }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
+      {{ title_suffix }}         
+      <div class="course-meta">
+        <div class="course-teacher"><i class="gv-icon-1080"></i>{{ content.field_course_teacher }}</div> 
+        <div class="course-duration "><i class="gv-icon-952"></i>{{ node.field_course_duration.value }}</div> 
+      </div>
+      <div class="description">{{ content.body }}</div>
+      <div class="course-price hidden">{{ content.field_course_price }}</div>
+      <div class="view-node"><a href="{{url}}">{{ 'Read more'|t }} <i class="gv-icon-165"></i></a></div>
+    </div>
+  </div>
+<!-- End Display course for teaser page -->
+{% else %}
+<!-- Start Display course for detail page -->
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="row single-course">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+      <div class="clearfix">
+        <div class="post-thumbnail">
+          {{ content.field_course_image }}
+        </div>
+
+        {{ title_prefix }}
+          <h1{{ title_attributes.addClass('post-title') }}>{{ label }}</h1>
+        {{ title_suffix }}   
+
+        <div class="course-meta clearfix">
+          {% if content.field_course_teacher %}
+            <div class="meta-item">
+              <div class="icon icon-teacher"></div>
+              <div class="content">
+                <span class="lab">{{ 'Teacher'|t }}</span>
+                <span class="val">{{ content.field_course_teacher }}</span>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if content.field_course_category %}
+            <div class="meta-item">
+              <div class="icon icon-category"></div>
+              <div class="content">
+                <span class="lab">{{ 'Category'|t }}</span>
+                <span class="val">{{ content.field_course_category }}</span>
+              </div>
+            </div>
+          {% endif %}  
+    
+          {% if node.field_course_duration.value %}
+            <div class="meta-item">
+              <div class="icon icon-duration"></div>
+              <div class="content">
+                <span class="lab">{{ 'Duration Time'|t }}</span>
+                <span class="val">{{ node.field_course_duration.value }}</span>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if node.field_course_level.value %}
+            <div class="meta-item">
+              <div class="icon icon-level"></div>
+              <div class="content">
+                <span class="lab">{{ 'Level'|t }}</span>
+                <span class="val">{{ node.field_course_level.value }}</span>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if node.field_course_student.value %}
+            <div class="meta-item">
+              <div class="icon icon-students"></div>
+              <div class="content">
+                <span class="lab">{{ 'Students'|t }}</span>
+                <span class="val">{{ node.field_course_student.value }}</span>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if node.field_course_price.value %}
+            <div class="meta-item">
+              <div class="icon icon-price"></div>
+              <div class="content">
+                <span class="lab">{{ 'Price'|t }}</span>
+                <span class="val">{{ node.field_course_price.value }}</span>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="post-content">
+          <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+            {{ content|without('field_course_image','field_course_category','field_course_duration','field_course_student','field_course_level','field_course_teacher','field_course_price','field_lesson','field_course_feature','comment') }}
+        </div>
+
+        <div class="course-features">
+          {{ content.field_course_feature }}
+        </div>
+
+        <div class="course-lessons">
+            {{ lessons|raw }}
+        </div>
+        <div id="node-single-comment">
+            {{ content.comment }}
+        </div>
+        </div>
+      </div>
+    </div>
+
+  </div>    
+
+</article>
+
+<!-- End Display article for detail page -->
+{% endif %}

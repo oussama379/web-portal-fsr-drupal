@@ -1,0 +1,28 @@
+<div class="post-style-grid-4">
+   <div class="row">
+      {% set i = 0 %}
+      {% for row in rows %}
+
+         {% set i = i + 1 %}
+         {# If i = 1 #}
+         {% if i == 1 %}
+            <div class="col-md-6 col-sm-12 col-xs-12 col-1">
+               {{ row.content }}
+            </div>
+         {% endif %}
+
+         {# If i > 1 #}
+         {% if i > 1 %}
+            {% if i == 2 %} <div class="col-md-6 col-sm-12 col-xs-12 col-2">{% endif %}
+               {% if i % 2 == 0 %}<div class="row">{% endif %}   
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-3">{{ row.content }}</div>
+               {% if i % 2 == 1 or i == rows|length %}</div> {% endif %}
+            {% if i == 5 or i == rows|length %}</div></div> {% endif %}
+         {% endif %} 
+
+         {# If i = 5 -> rest i #}
+         {% if i == 5 %}{% set i = 0 %}{% endif %}
+
+      {% endfor %}
+   </div>
+</div>

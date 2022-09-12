@@ -1,0 +1,245 @@
+@import "vars/_theme_variables";
+@import "mixins/mixins";
+@import "mixins/template";
+.gavias_sliderlayer{
+   background: #f5f5f5!important;
+}
+.layer-style-image{
+  display: inline-block;
+  text-align: center;
+  img{
+    max-width: 100%!important;
+    height: auto!important;
+  } 
+}
+.gavias_sliderlayer, #gavias_slider_single{
+  .tp-bullets{
+    -webkit-opacity: 1!important;
+    -ms-opacity: 1!important;
+    -o-opacity: 1!important;
+    opacity: 1!important;
+    visibility: visible!important;
+    margin-left: -40px;
+    .tp-bullet{
+      @include size(20px, 5px); 
+      background: rgba(255, 255, 255, 0.4);
+      &.selected{
+        background: $white;
+      }
+    }
+  }
+  .tparrows{
+    @include size(42px, 42px);
+    background: $white!important;
+    line-height: 42px;
+    color: $black;
+    font-size: 18px;
+    @include box-shadow(0px 2px 3px 0px rgba(0, 0, 0, 0.05));
+    @media(max-width: $screen-sm-max){
+      @include size(35px, 35px);
+      line-height: 35px;
+    }
+    &:before{
+      color: $black!important;
+      line-height: 42px!important;
+      @media(max-width: $screen-sm-max){
+        line-height: 35px!important;
+      }
+    }
+    &:hover, &:focus, &:active{
+      background: $theme-color!important;
+      &:before{
+        color: $white!important;
+      }
+    }
+  }
+  .tp-caption{
+    z-index: 99;
+    line-height: 28px;
+    color: $black;
+  }
+  .sub-title{
+    text-transform: uppercase;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    color: $white;
+    &:after{
+      content: "";
+      @include size(5px, 100%);
+      background: $theme-color;
+      position: absolute;
+      top: -2px;
+      left: 0;
+      z-index: 99;
+    }
+  }
+   
+  .slide-style-1{
+    color: $black;
+    font-size: 30px;
+    line-height: 48px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: $font-second;
+  }
+
+  .slide-style-2{
+    color: $black;
+    font-size: 48px;
+    line-height: 48px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: $font-second;
+  }
+
+  .slide-style-3{
+    color: $black;
+    font-size: 60px;
+    line-height: 76px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: $font-second;
+  }
+ 
+  .slide-style-4{
+    font-size: 20px;
+    line-height: 38px;
+  }
+
+  .slide-style-5{
+    font-size: 16px;
+    line-height: 30px;
+  }
+
+  .text-normal{
+    @media(max-width: $screen-xs-max){
+      font-size: 14px;
+    }
+  }
+
+  .text-black{
+    color: $black!important;
+  }
+
+  .text-theme{
+    color: $theme-color!important;
+  }
+
+  .text-white{
+    color: $white!important;
+  }
+
+  .text-center{
+    text-align: center;
+  }
+  .text-right{
+    text-align: right;
+  }
+  .text-left{
+    text-align: left;
+  }
+
+  .btn-slide, .btn-slide-white{
+    background: $theme-color;
+    color: $white;
+    @include border-radius(30px);
+    font-family: $font-second;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    &.inner, a{
+      text-align: center;
+      @include border-radius(30px);
+      display: inline-block;
+      padding: 10px 24px 8px;
+      color: $white;
+      @include size(100%, 100%);
+      @include box-shadow(0px 5px 10px 0px rgba(0, 0, 0, 0.2));
+      @include transition(all 0.3s);
+    }
+    &:hover, &:focus, &:active, &.active{
+      color: $theme-color!important;
+      background: $white;
+      a{
+        color: $theme-color;
+      }
+      &:before{
+        color: $theme-color;
+      }
+    }
+  }
+
+  .btn-slide-white{
+    background: $white;
+    color: $black;
+    &.inner, a{
+      display: inline-block;
+      color: $black;
+      @include size(100%, 100%);
+      border: none;
+    }
+    &:hover, &:focus, &:active{
+      a{
+        background: $theme-color;
+        color: $white;
+      }
+    }
+  }
+
+  .btn-slide-line{
+    border: 2px solid $white;
+    background: none;
+    font-size: 13px;
+    text-transform: uppercase;
+    backface-visibility: hidden;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-right: 10px;
+    position: relative;
+    text-align: center;
+    color: $white!important;
+    padding: 10px 20px 8px;
+    @include transition(all 0.35s);
+    a{
+      @include transition(all 0.35s);
+      color: $white!important;
+    }
+    &:hover{
+      background: $white;
+      color: $black!important;
+      a{
+        color: $black!important;
+      }
+    } 
+  }
+
+  .btn-radius{
+    @include border-radius(30px);
+  }
+
+  .gavias-overlay{
+    &:after{
+      content: "";
+      background: url(#{$base-theme-image-path}grid-slide.png) repeat rgba(0, 0, 0, 0.3);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+  }
+}   

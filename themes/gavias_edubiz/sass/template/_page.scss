@@ -1,0 +1,228 @@
+body{
+  &.hidden-title{
+    .node--view-mode-full header{
+      display: none!important;
+    }
+  }
+  &.page-background{
+    background: url('#{$base-theme-image-path}/bg-home.jpg') no-repeat top center #EEEEEE;
+    #footer, .gva-body-page{
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+  }
+}
+
+
+/* ----- Maintenance page ----- */
+body.maintenance-page {
+  background-color: #fff;
+  color: #000;
+}
+.maintenance-page #page-wrapper {
+  background: #fff;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid #ddd;
+  margin-top: 40px;
+}
+.maintenance-page #page {
+  margin: 10px;
+}
+.maintenance-page #main-wrapper {
+  min-height: inherit;
+}
+.maintenance-page #header {
+  width: auto;
+}
+.maintenance-page #main {
+  margin: 0;
+}
+.maintenance-page .content .section {
+  padding: 0 0 0 10px; /* LTR */
+}
+[dir="rtl"] .maintenance-page .content .section {
+  padding-left: 0;
+  padding-right: 10px;
+}
+.maintenance-page #header {
+  background-color: #fff;
+  background-image: none;
+}
+.maintenance-page .site-branding-text {
+  margin-bottom: 50px;
+  margin-left: 0; /* LTR */
+  padding-top: 20px;
+  font-size: 90%;
+}
+[dir="rtl"] .maintenance-page .site-branding-text {
+  margin-right: 0;
+}
+.maintenance-page .site-branding-text,
+.maintenance-page .site-branding-text a,
+.maintenance-page .site-branding-text a:hover,
+.maintenance-page .site-branding-text a:focus {
+  color: #777;
+}
+.maintenance-page  .page-title {
+  line-height: 1em;
+  margin-top: 0;
+}
+@media all and (min-width: 800px) {
+  .maintenance-page #page-wrapper {
+    width: 800px;
+  }
+  .maintenance-page #header div.section,
+  .maintenance-page #main {
+    width: 700px;
+  }
+}
+@media all and (min-width: 600px) { /* @TODO find the proper breakpoint */
+  .maintenance-page #page {
+    margin: 20px 40px 40px;
+  }
+}
+
+.page-notfound{
+  text-align: center;
+  padding: 150px 0;
+  background: #f6f6f6;
+  @media(max-width: $screen-sm-max){
+    padding: 50px 0;
+  }
+  header{
+    display: none!important;
+  }
+  .big-title{
+      font-size: 200px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: $black;
+      line-height: 1;
+      @media(max-width: $screen-sm-max){
+        font-size: 90px;
+      }
+  }
+  .sub-title{
+    color: #999999;
+    padding: 30px 0;
+  }
+  .content{
+    color: #666666;
+    font-size: 16px;
+    max-width: 450px;
+    margin: 0 auto;
+    line-height: 30px;
+    @media(max-width: $screen-sm-max){
+      padding: 0 20px;
+    }
+  }
+  .action{
+    text-align: center;
+    margin-top: 30px;
+    a{
+      font-size: 16px;
+      color: $theme-color;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      &:hover{
+        color: $black;
+      }
+    }
+  }
+}
+
+.view-page{
+  margin-bottom: 50px;
+} 
+
+.node--view-mode-full{
+  &.node--type-portfolio{
+    .post-title{
+      font-size: 24px;
+      text-transform: uppercase;
+      padding: 0;
+    }
+    .post-meta{
+      padding-bottom: 20px;
+    }
+    .portfolio-images{
+      .owl-nav{
+        .owl-prev{
+          left: 20px!important;
+        }
+        .owl-next{
+          right: 20px!important;
+        }
+      }
+      .owl-dots{
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.portfolio-single{
+  padding-bottom: 30px;
+  .portfolio-informations{
+    margin-bottom: 15px;
+    .item-information{
+      border-bottom: 1px solid $border-color;
+      padding: 15px 0;
+      span{
+        &:first-child{
+          font-weight: 700;
+          min-width: 120px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+  .post-content{
+    ul{
+      padding-left: 20px;
+      margin-top: 15px;
+    }
+  }
+}
+
+
+
+#user-register-form{
+  padding: 20px 0;
+  .form-wrapper{
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $border-color;
+    &#edit-actions{
+      border-bottom: none;
+    }
+  }
+  label{
+    width: 100%;
+  }
+  .form-item{
+    margin-bottom: 15px;
+  }
+}
+
+#user-login-form, #user-register-form, #user-pass{
+  max-width: 800px;
+  margin: 0 auto;
+  @include box-shadow(0px 0px 10px rgba(0, 0, 0, 0.15));
+  padding: 30px;
+  margin-bottom: 50px;
+  margin-top: 30px; 
+  @include clearfix();
+}
+summary{
+  font-weight: 700;
+  text-transform: uppercase;
+  color: $theme-color;
+}

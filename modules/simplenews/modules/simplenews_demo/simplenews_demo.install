@@ -1,0 +1,233 @@
+<?php
+use Drupal\node\Entity\Node;
+use Drupal\simplenews\Entity\Newsletter;
+use Drupal\simplenews\Entity\Subscriber;
+use Drupal\user\Entity\User;
+
+/**
+ * @file
+ * Simplenews_demo base install file.
+ */
+
+
+/*
+ * Implements hook_install().
+ *
+ * Declares initial configuration for simplenews_demo.
+ */
+function simplenews_demo_install() {
+
+  \Drupal::service('router.builder')->rebuild();
+
+  // Set the default values for test_address, from_address and from_name.
+  $site_mail = \Drupal::config('system.site')->get('mail');
+  $site_name = \Drupal::config('system.site')->get('name');
+
+  // Init the demo newsletter.
+  $newsletters = Newsletter::loadMultiple();
+  foreach ($newsletters as $newsletter) {
+    $newsletter->from_name = $site_name;
+    $newsletter->from_address = $site_mail;
+    $newsletter->save();
+  }
+
+  // add subscriber fields to the form display.
+  entity_get_form_display('simplenews_subscriber', 'simplenews_subscriber', 'default')
+    ->setComponent('field_first_name', array(
+      'type' => 'string_textfield',
+      'weight' => '2',
+      'settings' => array(
+        'size' => 60,
+        'placeholder' => ''
+      ),
+      'third_party_settings' => array(),
+    ))
+    ->setComponent('field_last_name', array(
+      'type' => 'string_textfield',
+      'weight' => '3',
+      'settings' => array(
+        'size' => 60,
+        'placeholder' => ''
+      ),
+      'third_party_settings' => array(),
+    ))
+    ->setComponent('field_city', array(
+      'type' => 'string_textfield',
+      'weight' => '4',
+      'settings' => array(
+        'size' => 60,
+        'placeholder' => ''
+      ),
+      'third_party_settings' => array(),
+    ))
+    ->save();
+
+  /** @var \Drupal\simplenews\Subscription\SubscriptionManagerInterface $subscription_manager */
+  $subscription_manager = \Drupal::service('simplenews.subscription_manager');
+
+  // Create some subscribers.
+  // Subscriber subscribed to only one newsletter.
+  $subscription_manager->subscribe('a@example.com', $newsletters['special_offers']->id(), FALSE);
+  $subscriber = simplenews_subscriber_load_by_mail('a@example.com');
+  // Add field data for subscriber.
+  $subscriber->set('field_first_name', 'Subscriber A first name');
+  $subscriber->set('field_last_name', 'Subscriber A last name');
+  $subscriber->set('field_city', 'Subscriber A city');
+  $subscriber->save();
+  // Subscriber subscribed to all newsletters.
+  $subscription_manager->subscribe('b@example.com', $newsletters['special_offers']->id(), FALSE);
+  $subscription_manager->subscribe('b@example.com', $newsletters['press_releases']->id(), FALSE);
+  $subscription_manager->subscribe('b@example.com', $newsletters['weekly_content_update']->id(), FALSE);
+  // Add field data to subscriber.
+  $subscriber = simplenews_subscriber_load_by_mail('a@example.com');
+  $subscriber->set('field_first_name', 'Subscriber B first name');
+  $subscriber->save();
+  // Unsubscribed subscriber.
+  $subscription_manager->subscribe('c@example.com', $newsletters['press_releases']->id(), FALSE);
+  $subscription_manager->unsubscribe('c@example.com', $newsletters['press_releases']->id(), FALSE);
+  // Unconfirmed subscriber.
+  $subscription_manager->subscribe('d@example.com', $newsletters['special_offers']->id(), TRUE);
+
+  // Create an active demo user.
+  $demo_user_active = User::create(array(
+    'name' => 'demo user 1',
+    'mail' => 'demouser1@example.com',
+    'status' => TRUE,
+  ));
+  $demo_user_active->activate();
+  $demo_user_active->save();
+  // Create a blocked demo user.
+  $demo_user_blocked = User::create(array(
+    'name' => 'demo user 2',
+    'mail' => 'demouser2@example.com',
+    'status' => FALSE,
+  ));
+  $demo_user_blocked->block();
+  $demo_user_blocked->save();
+  // Create an inactive subscriber.
+  $subscriber_inactive = Subscriber::create(array(
+      'mail' => 'd@example.com',
+      'status' => FALSE
+    )
+  );
+  $subscriber_inactive->save();
+  // subscribe user to both newsletters.
+  $subscription_manager->subscribe($demo_user_active->getEmail(), $newsletters['press_releases']->id(), FALSE);
+  $subscription_manager->subscribe($demo_user_active->getEmail(), $newsletters['special_offers']->id(), FALSE);
+
+  // Create an issue for scheduled sending.
+  $scheduled_issue = Node::create(array(
+    'type' => 'simplenews_issue',
+    'id' => 'simplenews_issue_scheduled',
+    'title' => 'Scheduled weekly content newsletter issue',
+    'body' => 'Scheduled weekly content newsletter issue will be sent to subscribers every week',
+    'created' => time(),
+    'uid' => 0,
+    'status' => 1,
+    'simplenews_issue' => array(
+      'target_id' => 'weekly_content_update',
+      'handler' => 'simplenews_all',
+      'handler_settings' => array()
+    ),
+  ));
+  $scheduled_issue->save();
+  // Write a record for the demo newsletter scheduler configuration.
+  $nid = $scheduled_issue->id();
+  $record = array(
+    'nid' => $nid,
+    'next_run' => strtotime('yesterday, 8:00 UTC'),
+    'activated' => 1,
+    'send_interval' => 'week',
+    'interval_frequency' => 1,
+    'start_date' => strtotime('yesterday, 8:00 UTC'),
+    'stop_type' => 0,
+    'stop_date' => 0,
+    'stop_edition' => 0,
+    'title' => '[node:title] - [node:created:custom:\W\e\e\k W,Y ]',
+  );
+
+  // Update scheduler record.
+  db_merge('simplenews_scheduler')
+    ->key(array(
+      'nid' => $nid,
+    ))
+    ->fields($record)
+    ->execute();
+
+  // A newsletter to send.
+  $node = Node::create(array(
+    'type' => 'simplenews_issue',
+    'id' => 'simplenews_issue_sent',
+    'title' => 'Sent press releases',
+    'body' => 'This press release is already sent to subscribers!',
+    'uid' => 0,
+    'status' => 1,
+    'simplenews_issue' => array(
+      'target_id' => 'press_releases',
+      'handler' => 'simplenews_all',
+      'handler_settings' => array()
+    ),
+  ));
+  $node->save();
+  // Send the node.
+  \Drupal::service('simplenews.spool_storage')->addFromEntity($node);
+  $node->save();
+  // Send mails.
+  \Drupal::service('simplenews.mailer')->sendSpool();
+  // Run cron.
+  \Drupal::service('cron')->run();
+  // Update send status of newsletter issues.
+  \Drupal::service('simplenews.mailer')->updateSendStatus();
+
+  // Create a newsletter issues with different send status.
+  // Published newsletter, not yet sent.
+  $node = Node::create(array(
+    'type' => 'simplenews_issue',
+    'id' => 'simplenews_issue_pending',
+    'title' => 'Pending special offers',
+    'body' => 'Grab them while you can, limited availability! These offers can often only be available for a short time, so take advantage of these special prices while you can.',
+    'uid' => 0,
+    'status' => 1,
+    'simplenews_issue' => array(
+      'target_id' => 'special_offers',
+      'handler' => 'simplenews_all',
+      'handler_settings' => array()
+    ),
+  ));
+  $node->save();
+  simplenews_issue_update_sent_status($node, SIMPLENEWS_STATUS_SEND_PENDING);
+
+  // Unpublished newsletter.
+  $node = Node::create(array(
+    'type' => 'simplenews_issue',
+    'id' => 'simplenews_issue_unpublished',
+    'title' => 'Unpublished press releases',
+    'body' => 'Unpublished press releases body',
+    'uid' => 0,
+    'status' => 0,
+    'simplenews_issue' => array(
+      'target_id' => 'press_releases',
+      'handler' => 'simplenews_all',
+      'handler_settings' => array()
+    ),
+  ));
+  $node->save();
+  simplenews_issue_update_sent_status($node, SIMPLENEWS_STATUS_SEND_PUBLISH);
+
+  // Newsletter that is stopped sending.
+  $node = Node::create(array(
+    'type' => 'simplenews_issue',
+    'id' => 'simplenews_issue_stopped',
+    'title' => 'Stopped special offers',
+    'body' => 'Upcoming special offers!',
+    'uid' => 0,
+    'status' => 1,
+    'simplenews_issue' => array(
+      'target_id' => 'special_offers',
+      'handler' => 'simplenews_all',
+      'handler_settings' => array()
+    ),
+  ));
+  $node->save();
+  simplenews_issue_update_sent_status($node, SIMPLENEWS_STATUS_SEND_NOT);
+}

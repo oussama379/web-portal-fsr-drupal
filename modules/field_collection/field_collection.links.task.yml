@@ -1,0 +1,13 @@
+entity.field_collection_item.canonical:
+  route_name: entity.field_collection_item.canonical
+  base_route: entity.field_collection_item.canonical
+  title: 'View'
+entity.field_collection_item.edit_form:
+  route_name: entity.field_collection_item.edit_form
+  base_route: entity.field_collection_item.canonical
+  title: Edit
+entity.field_collection_item.delete_form:
+  route_name: entity.field_collection_item.delete_form
+  base_route: entity.field_collection_item.canonical
+  title: Delete
+  weight: 10

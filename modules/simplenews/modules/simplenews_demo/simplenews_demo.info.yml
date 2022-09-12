@@ -1,0 +1,17 @@
+name: Simplenews Demo
+type: module
+description: Demo module for Simplenews.
+# core: 8.x
+dependencies:
+  - block
+  - views
+  - simplenews
+  - simplenews_scheduler
+hidden: false
+package: Mail
+
+# Information added by Drupal.org packaging script on 2017-02-14
+version: '8.x-1.0-alpha3'
+core: '8.x'
+project: 'simplenews'
+datestamp: 1487059688

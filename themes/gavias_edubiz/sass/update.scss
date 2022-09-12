@@ -1,0 +1,44 @@
+@import "vars/_theme_variables";
+
+@import "mixins/mixins";
+@import "mixins/template";
+@import "rtl/rtl";
+
+.single-course .course-meta{
+   .meta-item{
+      &:nth-child(3n+1){
+         clear: both;
+      }
+   }
+   @media(max-width: $screen-xs-max){
+      .meta-item{
+         width: 50%;
+         &:nth-child(3n+1){
+            clear: none;
+         }
+         &:nth-child(2n+1){
+            clear: both;
+         }
+      }
+   }
+   @media(max-width: 400px){
+      .meta-item{
+         width: 100%;
+      }
+   }
+}
+
+.icon-level{
+   background: url('#{$base-theme-image-path}/level-up.png') no-repeat scroll center center transparent;
+}
+.icon-price{
+   background: url('#{$base-theme-image-path}/price-tag.png') no-repeat scroll center center transparent;
+}
+.icon-students{
+   background: url('#{$base-theme-image-path}/student.png') no-repeat scroll center center transparent;
+}
+
+.gbb-row.gsc-equal-height .column-content-inner{
+   @include translateY(0);
+   top: 0;
+} 

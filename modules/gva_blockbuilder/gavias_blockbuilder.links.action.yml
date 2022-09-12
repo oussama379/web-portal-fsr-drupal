@@ -1,0 +1,7 @@
+gavias_blockbuilder_add_action:
+   route_name: gavias_blockbuilder.admin.add
+   title: 'Add Block Builder'
+   route_parameters:
+        bid: '0'
+   appears_on:
+      - gavias_blockbuilder.admin

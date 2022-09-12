@@ -1,0 +1,15 @@
+{
+  "name": "jquery.typer",
+  "main": "./src/jquery.typer.js",
+  "dependencies": {},
+  "homepage": "https://github.com/layervault/jquery.typer.js",
+  "_release": "1322b88274",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1322b88274ce79656105bcc1e1fdc1772c10e4b4"
+  },
+  "_source": "https://github.com/layervault/jquery.typer.js.git",
+  "_target": "*",
+  "_originalSource": "jquery.typer"
+}

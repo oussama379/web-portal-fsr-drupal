@@ -1,0 +1,86 @@
+<!-- Start Display article for teaser page -->
+{% if teaser == true %} 
+  <div class="team-block">
+    <div class="team-image">{{ content.field_team_image }}
+      <a class="team-email" href="mailto:{{node.field_team_email.value|e}}">{{ 'Email'|t }}</a>
+    </div>
+    <div class="team-content">
+      <div class="team-name"><a href="{{ url }}">{{ node.field_team_name.value|e }}</a></div>   
+      <div class="team-job">{{ node.field_team_position.value|e }}</div>
+      <div class="team-body">{{ content.body }}</div>
+      <div class="socials">
+        {% for item in node.field_team_social %}
+          <a class="gva-social" href="{{ item.getFieldCollectionItem().field_team_social_link.value|e }}">
+            <i class="{{ item.getFieldCollectionItem().field_team_social_icon.value|e }}"></i>
+          </a>
+        {% endfor %} 
+      </div>
+    </div>
+  </div>  
+<!-- End Display article for teaser page -->
+{% else %}
+<!-- Start Display article for detail page -->
+{%
+  set classes = [
+    'node',
+    'node-detail',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="team-single-page">
+    <div class="row">
+      <div class="col-md-3 col-sm-3 col-xs-12">
+        <div class="team-image">{{ content.field_team_image }}</div>
+        <div class="team-contact margin-top-10">
+            <div class="heading">{{'Contact Info'|t}}</div>
+            <div class="content-inner">{{ content.field_team_contact }}</div>
+            <div class="socials">
+              {% for item in node.field_team_social %}
+                <a class="gva-social" href="{{ item.getFieldCollectionItem().field_team_social_link.value|e }}">
+                  <i class="{{ item.getFieldCollectionItem().field_team_social_icon.value|e }}"></i>
+                </a>
+              {% endfor %} 
+            </div>
+          </div>
+      </div>
+      <div class="col-md-9 col-sm-9 col-xs-12">
+        <div class="team-name clearfix">
+          <div class="name">{{ node.field_team_name.value|e }}</div>
+          <div class="job">{{ node.field_team_position.value|e }}</div>
+        </div> 
+        <div class="team-description">{{ content.field_team_description }}</div>
+        <div class="team-info">
+          <div class="team-education">
+            <div class="heading">{{'Education'|t}}</div>
+            <div class="content-inner">{{ content.field_team_education }}</div>
+          </div>
+        </div>
+        <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+          {{ content|without('field_team_name', 'field_team_contact', 'field_team_image', 'field_team_contact', 'field_team_quote', 'field_team_social', 'field_team_education', 'field_team_position', 'field_team_email', 'field_team_description', 'comment') }}
+        </div>
+
+        {% if content.field_team_quote|render %}
+          <div class="team-quote"> {{content.field_team_quote}} </div>
+        {% endif %}  
+        
+      </div>
+     
+    {% if content.comment %}
+      <div id="node-single-comment">
+        {{ content.comment }}
+      </div>
+    {% endif %}  
+
+  </div>
+</article>
+
+<!-- End Display article for detail page -->
+{% endif %}
+

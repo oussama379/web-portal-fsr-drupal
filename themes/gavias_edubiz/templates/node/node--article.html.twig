@@ -1,0 +1,90 @@
+{%
+  set classes = [
+    'node',
+    'node-detail',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+<!-- Start Display article for teaser page -->
+{% if teaser == true %} 
+  <div class="post-block">
+    <div class="post-image">
+      {% if post_format == 'video' or post_format == 'audio' and gva_iframe %}
+        {{ gva_iframe|raw }}
+      {% elseif post_format == 'gallery' and content.field_post_gallery %}
+        {{ content.field_post_gallery }}
+      {% else %}
+        {{ content.field_image }}
+      {% endif %} 
+    </div>
+    <div class="post-content text-left">
+      <div class="post-title"> <a href="{{ url }}" rel="bookmark">{{ label }}</a> </div>            
+        <div class="post-meta">
+          <span class="post-categories">{{ content.field_post_category }}</span> -
+          <span class="post-created">{{ date }} </span>
+        </div>
+       <div class="post-body">
+          {{ content.body }}
+       </div>
+    </div>
+  </div>
+<!-- End Display article for teaser page -->
+{% else %}
+<!-- Start Display article for detail page -->
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="post-block">
+      
+    <div class="post-thumbnail post-{{ post_format }}">
+      {% if post_format == 'video' or post_format == 'audio' and gva_iframe %}
+        {{ gva_iframe|raw }}
+      {% elseif post_format == 'gallery' and content.field_post_gallery %}
+        {{ content.field_post_gallery }}
+      {% else %}
+        {{ content.field_image }}
+      {% endif %}  
+    </div>
+
+    <div class="post-content">
+      {{ title_prefix }}
+         <h1{{ title_attributes.addClass('post-title') }}>{{ label }}</h1>
+      {{ title_suffix }}         
+      <div class="post-meta">
+        <span class="post-categories">{{ content.field_post_category }}</span> /
+        <span class="post-created"> {{date }} </span> /
+        <span class="post-comment"> 
+          <a href="{{url}}/#comments">{{ comment_count }} Comments</a>
+        </span>
+      </div>
+      
+      {% if display_submitted %}
+        <div class="node__meta hidden">
+          {{ author_picture }}
+          <span{{ author_attributes }}>
+            {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+          </span>
+          {{ metadata }}
+        </div>
+      {% endif %}
+
+      <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+        {{ content|without('field_image','field_post_category', 'field_post_format', 'field_post_type', 'field_post_embed', 'field_post_gallery', 'comment') }}
+      </div>
+      <div id="node-single-comment">
+        {{ content.comment }}
+      </div>
+
+    </div>
+
+  </div>
+
+</article>
+
+<!-- End Display article for detail page -->
+{% endif %}

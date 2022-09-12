@@ -1,0 +1,67 @@
+gavias_sliderlayer.assets.admin:
+  version: 1.x
+  css:
+    theme:
+      vendor/font-awesome/css/font-awesome.min.css: {}
+      vendor/notify/styles/metro/notify-metro.css: {}
+      assets/css/admin.css: {}
+      vendor/revolution/css/layers.css: {}
+      vendor/revolution/css/settings.css: {}
+      vendor/jrange/nouislider.min.css: {}
+  js:
+    vendor/jquery-migrate.min.js: {}
+    assets/js/slider.js: { }
+    vendor/notify/notify.min.js: {}
+    vendor/notify/styles/metro/notify-metro.js: {}
+    vendor/jrange/nouislider.min.js: {}
+    assets/js/upload/jquery.ui.widget.js: { }
+    assets/js/upload/jquery.iframe-transport.js: { }
+    assets/js/upload/jquery.fileupload.js: { }
+    assets/js/upload/script.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.ui.sortable
+    - core/jquery.ui.draggable
+    - core/jquery.ui.dropable
+    - core/jquery.ui.dialog
+
+gavias_sliderlayer.assets.config_global:
+  version: 1.x
+  css:
+    theme:
+      assets/css/admin.css: {}
+      vendor/notify/styles/metro/notify-metro.css: {}
+  js:
+    vendor/notify/notify.min.js: {}
+    vendor/notify/styles/metro/notify-metro.js: {}
+    assets/js/group.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+gavias_sliderlayer.assets.frontend:
+  version: 1.x
+  header: true
+  css: 
+    theme:
+      vendor/revolution/css/settings.css: {}
+      vendor/revolution/css/layers.css: {}
+      vendor/revolution/css/navigation.css: {}
+  js:
+    vendor/revolution/js/source/jquery.themepunch.tools.min.js: {}
+    vendor/revolution/js/source/jquery.themepunch.revolution.js: {}
+    vendor/revolution/js/extensions/revolution.extension.actions.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.carousel.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.kenburn.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.layeranimation.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.migration.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.navigation.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.parallax.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.slideanims.min.js: {}
+    vendor/revolution/js/extensions/revolution.extension.video.min.js: {}
+  dependencies:
+    - core/jquery

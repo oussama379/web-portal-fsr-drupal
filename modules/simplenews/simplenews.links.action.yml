@@ -1,0 +1,29 @@
+simplenews.newsletter_add:
+  route_name: simplenews.newsletter_add
+  title: 'Add newsletter'
+  appears_on:
+    - simplenews.newsletter_list
+
+simplenews.subscriber_import:
+  route_name: simplenews.subscriber_import
+  title: 'Mass subscribe'
+  appears_on:
+    - view.simplenews_subscribers.page_1
+
+simplenews.subscriber_unsubscribe:
+  route_name: simplenews.subscriber_unsubscribe
+  title: 'Mass unsubscribe'
+  appears_on:
+    - view.simplenews_subscribers.page_1
+
+simplenews.subscriber_export:
+  route_name: simplenews.subscriber_export
+  title: 'Export'
+  appears_on:
+    - view.simplenews_subscribers.page_1
+
+simplenews.newsletter_issue_add:
+  route_name: node.add
+  appears_on:
+    - view.simplenews_newsletters.page_1
+  deriver: 'Drupal\simplenews\Plugin\Derivative\AddSimplenewsIssueActionLinks'

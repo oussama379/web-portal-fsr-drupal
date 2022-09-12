@@ -1,0 +1,72 @@
+<div class="content-main-inner">
+	<div class="row">
+		
+		{% set cl_main = 'col-md-12 col-xs-12' %}
+		{% if page.sidebar_right and page.sidebar_left %}	
+			{% set cl_main = 'col-xs-12 col-md-6 col-md-push-3 sb-r sb-l ' %}
+		{% elseif page.sidebar_right or page.sidebar_left %}	
+			{% if page.sidebar_right %}
+			 	{% set cl_main = 'col-xs-12 col-md-9 sb-r ' %}
+			{% endif %} 		
+			{% if page.sidebar_left %}
+				{% set cl_main = 'col-xs-12 col-md-9 col-md-push-3 sb-l ' %}
+			{% endif %}				
+      {% endif %} 
+
+		<div id="page-main-content" class="main-content {{ cl_main }}">
+
+			<div class="main-content-inner">
+				
+				{% if page.content_top %}
+					<div class="content-top">
+						{{ page.content_top }}
+					</div>
+				{% endif %}
+
+				{% if page.content %}
+					<div class="content-main">
+						{{ page.content }}
+					</div>
+				{% endif %}
+
+				{% if page.content_bottom %}
+					<div class="content-bottom">
+						{{ page.content_bottom }}
+					</div>
+				{% endif %}
+			</div>
+
+		</div>
+
+		<!-- Sidebar Left -->
+		{% if page.sidebar_left %}
+			{% set cl_left = 'col-md-3 col-md-pull-9 col-sm-12 col-xs-12' %}
+			{%	if page.sidebar_right %}
+			 	{% set cl_left = 'col-md-3 col-md-pull-6 col-sm-12 col-xs-12' %}
+			{% endif %} 		
+			
+			<div class="{{ cl_left }} sidebar sidebar-left">
+				<div class="sidebar-inner">
+					{{ page.sidebar_left }}
+				</div>
+			</div>
+		{% endif %}
+		<!-- End Sidebar Left -->
+
+		<!-- Sidebar Right -->
+		{% if page.sidebar_right %}
+			{% set cl_right = 'col-lg-3 col-md-3 col-sm-12 col-xs-12'  %}
+			{% if page.sidebar_left %}
+				{% set cl_right = 'col-lg-3 col-md-3 col-sm-12 col-xs-12' %}
+			{% endif %}	 
+
+			<div class="{{ cl_right }} sidebar sidebar-right theiaStickySidebar">
+				<div class="sidebar-inner">
+					{{ page.sidebar_right }}
+				</div>
+			</div>
+		{% endif %}
+		<!-- End Sidebar Right -->
+		
+	</div>
+</div>

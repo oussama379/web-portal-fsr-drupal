@@ -1,0 +1,24 @@
+<div class="content-main-inner">
+	<div id="page-main-content" class="main-content">
+		<div class="main-content-inner">
+			{% if page.content_top %}
+				<div class="content-top">
+					{{ page.content_top }}
+				</div>
+			{% endif %}
+
+			{% if page.content %}
+				<div class="content-main">
+					{{ page.content }}
+				</div>
+			{% endif %}
+
+			{% if page.content_bottom %}
+				<div class="content-bottom">
+					{{ page.content_bottom }}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,5 @@
+gavias_blockbuilder.admin:
+  title: 'Gavias blockbuilder'
+  description: 'List of block builder items'
+  parent: system.admin_structure
+  route_name: gavias_blockbuilder.admin

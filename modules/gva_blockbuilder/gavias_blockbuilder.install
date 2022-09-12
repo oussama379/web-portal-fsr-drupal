@@ -1,0 +1,31 @@
+<?php
+
+function gavias_blockbuilder_schema() {
+  if(!db_table_exists('gavias_blockbuilder')){
+    $schema['gavias_blockbuilder'] = array(
+      'fields' => array(
+        'id' => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+        ),
+        'title' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+        'body_class' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+        'params' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+      ),
+      'primary key' => array('id')
+    );
+    return $schema;
+  }
+}

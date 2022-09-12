@@ -1,0 +1,84 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link url, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ */
+#}
+
+<div class="gva-navigation">
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see http://twig.sensiolabs.org/doc/tags/macro.html
+#}
+{{ menus.menu_links(items, attributes, 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul {{ attributes.addClass('gva_menu gva_menu_main') }}>
+      
+    {% else %}
+      <ul class="menu sub-menu">
+    {% endif %}
+    {% for item in items %}
+      {% set class_mega_menu = '' %}
+      {% set class_columns = '' %}
+      {% if item.attributes.gva_layout == 'menu-block' and menu_level == 0 %}
+        {% set class_mega_menu = 'gva-mega-menu mega-menu-block' %} 
+      {% elseif item.attributes.gva_layout == 'menu-grid' and menu_level == 0 %}   
+        {% set class_mega_menu = 'gva-mega-menu megamenu menu-grid' %} 
+        {% set class_columns = ['menu-columns-', item.attributes.gva_layout_columns]|join('') %}
+      {% endif %}    
+      {%
+        set classes = [
+          'menu-item',
+          item.is_expanded ? 'menu-item--expanded',
+          item.is_collapsed ? 'menu-item--collapsed',
+          item.in_active_trail ? 'menu-item--active-trail',
+          item.attributes.gva_class,
+          class_mega_menu,
+          class_columns
+        ]
+      %}
+      <li {{ item.attributes.addClass(classes)|without('gva_icon', 'gva_class', 'gva_layout_columns', 'gva_block', 'gva_layout') }}>
+        <a href="{{ item.url }}">
+          {% if item.attributes.gva_icon != '' %}
+            <i class="fa {{ item.attributes.gva_icon }}"></i>
+          {% endif %}
+          {{ item.title|trim }}
+          {% if item.below or item.attributes.gva_layout == 'menu-block' and menu_level == 0 %}
+            <span class="icaret nav-plus fa fa-angle-down"></span>
+          {% endif %}  
+        </a>
+        {% if item.attributes.gva_layout == 'menu-block' and menu_level == 0 %}
+          <div class="sub-menu">
+            {{ item.gva_block_content|trim }}
+          </div>
+        {% endif %}  
+        {% if item.below %}
+          {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}
+</div>
+

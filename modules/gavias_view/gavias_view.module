@@ -1,0 +1,279 @@
+<?php
+
+use Drupal\Core\Field;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\taxonomy\Entity\Term;
+/**
+ * Implements hook_theme().
+ */
+function owl_theme() {
+  return [
+    'views_view_gvaowl' => [
+      'variables' => [],
+    ],
+    'views_view_gvaportfolio' => [
+      'variables' => [],
+    ],
+    'views_view_gvaonefour' => [
+      'variables' => [],
+    ],
+    'views_view_gvagrid' => [
+      'variables' => [],
+    ]
+  ];
+}
+
+/**
+ * Default template: views_view_gvaowl.html.twig.
+ */
+function template_preprocess_views_view_gvaowl(&$variables) {
+  $handler = $variables['view']->style_plugin;
+
+  $settings = gavias_view_owl_settings($handler->options);
+  
+  $variables['attributes']['class'][] = $settings['el_class'];
+  $variables['attributes']['class'][] = 'owl-carousel';
+  $variables['attributes']['class'][] = 'init-carousel-owl';
+  if($settings['el_id']){
+    $variables['attributes']['id'] = $settings['el_id'];
+  }
+  unset($settings['row_class']);
+  unset($settings['default_row_class']);
+  unset($settings['el_class']);
+  unset($settings['el_id']);
+  foreach ($settings as $key => $value) {
+    $variables['attributes']['data-' . $key] = $value;
+  }
+  
+  template_preprocess_views_view_unformatted($variables);
+}
+
+
+/**
+ * Default template: views_view_gvaportfolio.html.twig.
+ */
+function template_preprocess_views_view_gvaportfolio(&$variables) {
+  $_id = gavias_view_random_id();
+  $handler = $variables['view']->style_plugin;
+
+  $settings = $handler->options;
+  
+  $taxonomy = (isset($settings['taxonomy']) && $settings['taxonomy']) ? $settings['taxonomy'] : '';
+  $el_class = (isset($settings['el_class']) && $settings['el_class']) ? $settings['el_class'] : '';
+  $col = (isset($settings['columns']) && $settings['columns']) ? $settings['columns'] : 3;
+  $field_tid = (isset($settings['field_tid']) && $settings['field_tid']) ? $settings['field_tid'] : 3;
+  $tids = (isset($settings['tids']) && $settings['tids']) ? $settings['tids'] : '';
+  $slideset = (isset($settings['slideset'])) ? (bool)$settings['slideset'] : FALSE;
+  $bootstrap_4 = (isset($settings['bootstrap_4'])) ? (bool)$settings['bootstrap_4'] : FALSE;
+  $variables['attributes']['class'][] = $el_class;
+  $show_all = (isset($settings['show_all'])) ? (bool)$settings['show_all'] : TRUE;
+
+  $xclass = '';
+  if($col == '1' )
+    $xclass = 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12';
+  elseif ($col == '2')
+    $xclass = 'col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12';
+  elseif ($col == '3')
+    $xclass = 'col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-12';
+  elseif ($col == '4')
+    $xclass = 'col-xl-3 col-lg-3 col-md-3 col-sm-6 col-xs-12';
+  elseif ($col == '6')
+    $xclass = 'col-xl-2 col-lg-2 col-md-2 col-sm-6 col-xs-6';
+  else
+    $xclass = 'col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-12';
+
+  if($bootstrap_4){
+    if($col == '1' )
+      $xclass = 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12';
+    elseif ($col == '2')
+      $xclass = 'col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12';
+    elseif ($col == '3')
+      $xclass = 'col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12';
+    elseif ($col == '4')
+      $xclass = 'col-xl-3 col-lg-3 col-md-3 col-sm-6 col-xs-12';
+    elseif ($col == '6')
+      $xclass = 'col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-6';
+    else
+      $xclass = 'col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12';
+  }
+
+  $variables['column'] = $col;
+
+  foreach ($variables['view']->result as $key => $result){
+    
+    $tid = '';
+    if($result->_entity->hasField($field_tid)){
+      $field = $result->_entity->get($field_tid)->getValue();
+      foreach ($field as $k => $f) {
+        if(isset($f['target_id']) && $f['target_id']) $tid .= ' ' . $f['target_id'];
+      }
+    }
+    if(!$slideset){
+      $variables['rows'][$key] = '<div data-uk-filter="'.$tid.'" class="' . "{$xclass} {$tid}" . '">' . render($variables['rows'][$key]) . '</div>'; 
+    }else{
+      $variables['rows'][$key] = '<li data-uk-filter="'.trim($tid).'">' . render($variables['rows'][$key]) . '</li>';
+    } 
+  }
+  
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+
+  $terms_tmp = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($taxonomy);
+
+  if($tids){
+    $tids_arr = preg_split("/,/", $tids);
+    foreach ($terms_tmp as $key => $value) {
+      if(in_array($value->tid, $tids_arr)){
+        $taxonomy_term_load = Term::load($value->tid);
+        if(($taxonomy_term_load->hasTranslation($langcode))){
+          $taxonomy_term = $taxonomy_term_load->getTranslation($langcode);
+          $value->name = $taxonomy_term->getName();
+        }
+        $terms[] = $value;
+      }
+    }
+  }else{
+    foreach ($terms_tmp as $key => $value) {
+      $taxonomy_term_load = Term::load($value->tid);
+      if(($taxonomy_term_load->hasTranslation($langcode))){
+        $taxonomy_term = $taxonomy_term_load->getTranslation($langcode);
+        $value->name = $taxonomy_term->getName();
+      }
+      $terms[] = $value;
+    }
+  }
+
+  //print"<pre>"; print_r($terms);die();
+
+  $variables['terms'] = $terms;
+  $variables['show_all'] = $show_all;
+  $variables['pid'] = $_id;
+
+
+  template_preprocess_views_view_unformatted($variables);
+}
+
+/**
+ * Default template: views_view_gvaportfolio.html.twig.
+ */
+function template_preprocess_views_view_gvaonefour(&$variables) {
+  $_id = gavias_view_random_id();
+  $handler = $variables['view']->style_plugin;
+
+  $settings = $handler->options;
+  
+  $el_class = (isset($settings['el_class']) && $settings['el_class']) ? $settings['el_class'] : '';
+  $el_id = (isset($settings['el_id']) && $settings['el_id']) ? $settings['el_id'] : '';
+  $variables['attributes']['class'][] = 'gva-view-onefour';
+  $variables['attributes']['class'][] = $el_class;
+  if($el_id){
+    $variables['attributes']['id'] = $settings['el_id'];
+  }
+  
+  template_preprocess_views_view_unformatted($variables);
+}
+
+function template_preprocess_views_view_gvaportfolio_fields(&$variables) {
+  $variables['output'] = $variables['fields'];
+  die();
+}
+
+/**
+ * Default settings
+ */
+function gavias_view_owl_default_settings($key = NULL) {
+  $settings = array(
+    'items' => 5,
+    'items_lg' => 4,
+    'items_md' => 3,
+    'items_sm' => 2,
+    'items_xs' => 1,
+    'loop' => FALSE,
+    'speed' => 200,
+    'auto_play' => FALSE,
+    'auto_play_speed' => 1000,
+    'auto_play_timeout' => 3000,
+    'auto_play_hover' => TRUE,
+    'navigation' => TRUE,
+    'rewind_nav' => FALSE,
+    'pagination' => FALSE,
+    'mouse_drag' => TRUE,
+    'touch_drag' => TRUE,
+    'el_class'  => '',
+    'el_id' => ''
+  );
+
+  return isset($settings[$key]) ? $settings[$key] : $settings;
+}
+
+/**
+ * Setting options
+ */
+function gavias_view_owl_settings($options) {
+  $settings = array();
+  $settings['items'] = (int) $options['items'];
+  $settings['items_lg'] = (int) $options['items_lg'];
+  $settings['items_md'] = (int) $options['items_md'];
+  $settings['items_sm'] = (int) $options['items_sm'];
+  $settings['items_xs'] = (int) $options['items_xs'];
+  $settings['loop'] =  $options['loop'];
+  $settings['speed'] = (int) $options['speed'];
+  $settings['auto_play'] = $options['auto_play'];
+  $settings['auto_play_speed'] = (int)$options['auto_play_speed'];
+  $settings['auto_play_timeout'] = (int)$options['auto_play_timeout'];
+  $settings['auto_play_hover'] = (int) $options['auto_play_hover'];
+  $settings['navigation'] =  $options['navigation'];
+  $settings['rewind_nav'] =  $options['rewind_nav'];
+  $settings['pagination'] =  $options['pagination'];
+  $settings['mouse_drag'] =  $options['mouse_drag'];
+  $settings['touch_drag'] =  $options['touch_drag'];
+  $settings['el_class']   = $options['el_class'];
+  $settings['el_id']      = $options['el_id'];
+  return $settings;
+}
+
+/**
+ * Implements hook_help().
+ */
+function owl_help($route_name, RouteMatchInterface $route_match) {
+ 
+}
+
+function gavias_view_get_all_taxonomy(){
+  $list = array();
+  $vocabularies = \Drupal\taxonomy\Entity\Vocabulary::loadMultiple();
+  foreach($vocabularies as $taxonomy){
+    $list[$taxonomy->get('vid')] = $taxonomy->get('name');
+  }
+  return $list;
+    // $query = \Drupal::entityQuery('taxonomy_term');
+    // $query->condition('vid', "tags");
+    // $tids = $query->execute();
+    // $terms = \Drupal\taxonomy\Entity\Term::loadMultiple($tids);
+}
+
+function gavias_view_random_id($length = 5){
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, strlen($characters) - 1)];
+  }
+  return $randomString;
+}
+
+/**
+ * Default template: views_view_gvagrid.html.twig.
+ */
+function template_preprocess_views_view_gvagrid(&$variables) {
+  $handler = $variables['view']->style_plugin;
+  $settings = $handler->options;
+  $variables['attributes']['class'][] = 'gva-view-grid';
+  $variables['attributes']['class'][] = isset($settings['el_class']) && $settings['el_class'] ? $settings['el_class'] : '';
+  $variables['attributes']['id'] = isset($settings['el_id']) && $settings['el_id'] ? $settings['el_id'] : false;
+  $settings_grid['items_lg'] = isset($settings['items_lg']) && $settings['items_lg'] ? $settings['items_lg'] : 3;
+  $settings_grid['items_md'] = isset($settings['items_md']) && $settings['items_md'] ? $settings['items_md'] : 3;
+  $settings_grid['items_sm'] = isset($settings['items_sm']) && $settings['items_sm'] ? $settings['items_sm'] : 2;
+  $settings_grid['items_xs'] = isset($settings['items_xs']) && $settings['items_xs'] ? $settings['items_xs'] : 2;
+  $variables['class_grid'] = $settings_grid;
+  template_preprocess_views_view_unformatted($variables);
+}

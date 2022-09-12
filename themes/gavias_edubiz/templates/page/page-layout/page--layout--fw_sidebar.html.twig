@@ -1,0 +1,93 @@
+{#
+/**
+ * @file
+ * Gavias's theme implementation to display a single Drupal page.
+ */
+#}
+{% include directory ~ '/templates/page/parts/message.html.twig' %}
+<div class="body-page gva-body-page">
+	{% include directory ~ '/templates/page/parts/preloader.html.twig' %}
+   {% include header_skin %}
+	
+   {% if page.breadcrumbs %}
+		<div class="breadcrumbs">
+			{{ page.breadcrumbs }}
+		</div>
+	{% endif %}
+	
+	<div role="main" class="main main-page">
+	
+		<div class="clearfix"></div>
+		{% if page.slideshow_content %}
+			<div class="slideshow_content area">
+				{{ page.slideshow_content }}
+			</div>
+		{% endif %}	
+
+		{% if page.help %}
+			<div class="help show">
+				<div class="container">
+					<div class="control-panel"><i class="fa fa-cogs"></i></div>
+					<div class="content-inner">
+						{{ page.help }}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+		{% if page.fw_before_content %}
+			<div class="fw-before-content area">
+				{{ page.fw_before_content }}
+			</div>
+		{% endif %}
+		
+		<div class="clearfix"></div>
+		{% if page.before_content %}
+			<div class="before_content area">
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-12">
+							{{ page.before_content }}
+							</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		
+		<div class="clearfix"></div>
+		
+		<div id="content" class="content content-full">
+			<div class="container-full">
+				{% include directory ~ '/templates/page/main.html.twig' %}
+			</div>
+		</div>
+
+		{% if page.highlighted %}
+			<div class="highlighted area">
+				<div class="container">
+					{{ page.highlighted }}
+				</div>
+			</div>
+		{% endif %}
+
+		{% if page.after_content %}
+			<div class="area after_content">
+				<div class="container-fw">
+	          	<div class="content-inner">
+						 {{ page.after_content }}
+	          	</div>
+        		</div>
+			</div>
+		{% endif %}
+		
+		{% if page.fw_after_content %}
+			<div class="fw-before-content area">
+				{{ page.fw_after_content }}
+			</div>
+		{% endif %}
+
+	</div>
+
+</div>
+
+{% include directory ~ '/templates/page/footer.html.twig' %}

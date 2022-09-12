@@ -1,0 +1,7 @@
+gavias_hook_themer.ajax_views:
+  path: '/custom/gavias_hook/ajax_view'
+  defaults:
+    _title: 'Ajax Views'
+    _controller: '\Drupal\gavias_hook_themer\Controller\GvaAjaxController::gavias_ajax_view'
+  requirements:
+    _access: 'TRUE'

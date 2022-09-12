@@ -1,0 +1,53 @@
+field_collection.overview_field_collections:
+  path: '/admin/structure/field_collections'
+  defaults:
+    _title: 'Manage field collections'
+    _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'field_collection'
+  requirements:
+    _permission: 'administer field_collection_item fields'
+
+entity.field_collection.edit_form:
+  path: '/admin/structure/field_collections/manage/{field_collection}'
+  defaults:
+    _entity_form: 'field_collection.edit'
+  requirements:
+    _permission: 'administer field_collection_item fields'
+
+entity.field_collection_item.canonical:
+  path: '/field_collection_item/{field_collection_item}'
+  defaults:
+    _controller: '\Drupal\field_collection\Controller\FieldCollectionItemController::page'
+    _title_callback: '\Drupal\field_collection\Controller\FieldCollectionItemController::pageTitle'
+  requirements:
+    _access_field_collection_item_host: 'view'
+
+field_collection_item.revision_show:
+  path: '/field_collection_item/{field_collection_item}/revisions/{field_collection_item_revision}/view'
+  defaults:
+    _controller: '\Drupal\field_collection\Controller\FieldCollectionItemController::revisionShow'
+    _title_callback: '\Drupal\field_collection\Controller\FieldCollectionItemController::revisionPageTitle'
+  requirements:
+    _access_field_collection_item_host_revisions: 'view'
+
+field_collection_item.add_page:
+  path: '/field_collection_item/add/{field_collection}/{host_type}/{host_id}'
+  defaults:
+    _controller: '\Drupal\field_collection\Controller\FieldCollectionItemController::add'
+    _title_callback: '\Drupal\field_collection\Controller\FieldCollectionItemController::addPageTitle'
+  requirements:
+    _access_add_field_collection_item_to_host: '{host_type}:{host_id}'
+
+entity.field_collection_item.edit_form:
+  path: '/field_collection_item/{field_collection_item}/edit'
+  defaults:
+    _entity_form: 'field_collection_item.edit'
+  requirements:
+    _access_field_collection_item_host: 'update'
+
+entity.field_collection_item.delete_form:
+  path: '/field_collection_item/{field_collection_item}/delete'
+  defaults:
+    _entity_form: 'field_collection_item.delete'
+  requirements:
+    _access_field_collection_item_host: 'update'

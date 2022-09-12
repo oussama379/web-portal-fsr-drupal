@@ -1,0 +1,79 @@
+@import "vars/_theme_variables";
+
+@import "mixins/mixins";
+@import "mixins/template";
+@import "rtl/rtl"; 
+
+.entity-meta{
+   @include box-shadow(none);
+  details[open]{
+     background: none;
+     border: none;
+   }
+}
+.vertical-tabs__panes{
+   border: 0!important;
+}
+.vertical-tabs__pane summary{
+  display: block!important;
+  background-color: #ccc;
+  margin-bottom: 15px;
+}
+.vertical-tabs__pane > summary{
+  display: none!important;
+}
+
+input[type="text"], 
+input[type="tel"],
+input[type="password"],
+input[type="email"],
+textarea, select{
+  background-color: #fff;
+  @include box-shadow(0 0 2px 2px rgba(0, 0, 0, 0.02) inset);
+  border: 1px solid $border-color;
+  padding: 5px 10px;
+}
+input[type="text"]{
+  max-width: 300px;
+}
+
+.form-item{
+   padding-bottom: 10px;
+   select{
+    padding: 6px 25px 6px 6px;
+   }
+}
+.color-check{
+  border: 1px solid $border-color;
+  @include size(32px, 30px);
+  display: inline-block;
+  float: left;
+  margin-right: 10px;
+}
+
+.gva-customize{
+  .details-wrapper{
+    float: left;
+  }
+  .form-type-textfield{
+    display: block;
+    width: 100%;
+    float: left;
+    max-width: 500px;
+    clear: both;
+    margin-bottom: 0;
+    label{
+      display: block;
+      width: 100%;
+      clear: both;
+    }
+
+    input{
+      float: left;
+      max-width: 250px;
+    }
+  }
+}  
+
+.CodeMirror-gutter.CodeMirror-linenumbers{width: 29px!important;}
+.CodeMirror-sizer{margin-left: 30px!important;}

@@ -1,0 +1,7 @@
+name: Gavias Views Magazine
+type: module
+description: Gavias Views Magazine
+core: 8.x
+package: gavias
+dependencies:
+  - image

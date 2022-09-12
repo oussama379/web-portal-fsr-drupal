@@ -1,0 +1,31 @@
+.field--type-blockbuilder .gva-choose-gbb span.gbb-item{
+  padding: 5px 10px;
+  margin-right: 15px;
+  background: #F3F3F3;
+  margin-bottom: 10px;
+  display: inline-block;
+  font-weight: 700;
+  color: #757575;
+}
+.field--type-blockbuilder .gva-choose-gbb span .action{
+  display: none;
+}
+.field--type-blockbuilder .gva-choose-gbb span .action a{
+  font-weight: 400!important;
+}
+.field--type-blockbuilder .gva-choose-gbb span.active{
+  background: #0074bd;
+  color: #fff!important;
+}
+.field--type-blockbuilder .gva-choose-gbb span.active .action{
+  display: inline-block;
+}
+.field--type-blockbuilder .gva-choose-gbb span.active a{
+  color: #fff!important;
+}
+.field--type-blockbuilder .gva-choose-gbb a:hover, .gva-choose-gbb a:focus, .gva-choose-gbb a:active {
+  cursor: pointer;
+}
+.field--type-blockbuilder .gva-edit-gbb{
+  display: none;
+}

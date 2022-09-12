@@ -1,0 +1,21 @@
+<div class="col-md-4 location-item maker-item" data-id="maker_{{ fields.nid.content|striptags|trim }}" data-lat="{{ fields.field_location_map.content|striptags|trim }}">
+   <div class="location-item-inner maker-item-inner">
+      <div class="left"><i class="icon fa fa-map-marker"></i></div>
+      <div class="right">
+         <h3 class="location-title maker-item">{{ fields.title.content }}</h3>
+         <div class="location-body market-body">{{ fields.field_location_address.content }}</div>
+         <div class="location-body marker-hidden-content market-content hidden" data-id="maker_{{fields.nid.content|striptags|trim}}">
+            <div class="marker">
+               <div class="image">{{ fields.field_location_image.content }}</div>
+               <div class="info">
+                  <h3>{{ fields.title.content }}</h3>
+                  {{ fields.body.content }}
+                  <a href="{{fields.field_location_link.content|striptags|trim}}" class="link-visit">{{'Visit Website'|t}}</a>
+               </div>
+
+            </div>
+         </div>
+
+      </div>
+   </div>
+</div>

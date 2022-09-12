@@ -1,0 +1,191 @@
+global-styling:
+  version: VERSION
+  header: true
+  css:
+    theme:
+      //fonts.googleapis.com/css?family=Roboto:400,700: { type: external }
+      //fonts.googleapis.com/css?family=Poppins:400,600,700: { type: external }
+      css/sliderlayer.css: {}
+      css/font-awesome.css: {}
+      css/animate.css: {}
+      css/icon.css: {}
+      vendor/owl-carousel/assets/owl.carousel.min.css: {}
+      vendor/owl-carousel/assets/owl.theme.default.min.css: {}
+      vendor/prettyphoto/css/prettyPhoto.css: {}
+      vendor/ytplayer/css/jquery.mb.YTPlayer.min.css: {}
+      vendor/magnific/magnific-popup.css: {}
+  js:
+    vendor/jquery-migrate.min.js: {}
+    js/bootstrap.js: {}
+    js/imagesloader.min.js: {}
+    vendor/jquery.easing.js: {}
+    vendor/jquery.appear.js: {}
+    vendor/jquery.easypiechart.min.js: {}
+    vendor/owl-carousel/owl.carousel.min.js: {}
+    vendor/waypoint.js: {}
+    vendor/count-to.js: {}
+    vendor/masonry.pkgd.min.js: {}
+    vendor/isotope.pkgd.min.js: {}
+    vendor/aos.js: {}
+    vendor/jpreloader.min.js: {}
+    vendor/prettyphoto/js/jquery.prettyPhoto.js: {}
+    vendor/ytplayer/js/jquery.mb.YTPlayer.min.js: {}
+    vendor/jquery.typer/src/jquery.typer.js: {}
+    vendor/unslider-min.js: {}
+    vendor/perfect-scrollbar.jquery.min.js: {}
+    vendor/magnific/jquery.magnific-popup.min.js: {}
+    vendor/jquery.pjax.js: {}
+    js/main.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+gavias_edubiz.gallery:
+  version: VERSION
+  css:
+    theme: 
+      vendor/gallery/style.css: {}
+  js:
+    vendor/gallery/jquery.mobile.customized.min.js: {}
+    vendor/gallery/jquery.easing.1.3.js: {}
+    vendor/gallery/camera.js: {}
+    vendor/gallery/main.js: {}
+
+gavias_edubiz.skin.default:
+  version: VERSION
+  css:
+    theme: 
+      css/bootstrap.css: {}
+      css/template.css: {}
+
+gavias_edubiz.skin.blue:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/blue/bootstrap.css: {}
+      css/skins/blue/template.css: {}
+
+gavias_edubiz.skin.brown:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/brown/bootstrap.css: {}
+      css/skins/brown/template.css: {}
+
+gavias_edubiz.skin.green:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/green/bootstrap.css: {}
+      css/skins/green/template.css: {}
+
+gavias_edubiz.skin.lilac:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/lilac/bootstrap.css: {}
+      css/skins/lilac/template.css: {}
+
+gavias_edubiz.skin.lime_green:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/lime_green/bootstrap.css: {}
+      css/skins/lime_green/template.css: {}
+
+gavias_edubiz.skin.orange:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/orange/bootstrap.css: {}
+      css/skins/orange/template.css: {}
+
+gavias_edubiz.skin.pink:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/pink/bootstrap.css: {}
+      css/skins/pink/template.css: {}
+
+gavias_edubiz.skin.purple:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/purple/bootstrap.css: {}
+      css/skins/purple/template.css: {}
+
+gavias_edubiz.skin.red:
+  version: VERSION
+  css:
+    theme:  
+      css/skins/red/bootstrap.css: {}
+      css/skins/red/template.css: {}
+
+gavias_edubiz.skin.turquoise:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/turquoise/bootstrap.css: {}
+      css/skins/turquoise/template.css: {}
+
+gavias_edubiz.skin.turquoise2:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/turquoise2/bootstrap.css: {}
+      css/skins/turquoise2/template.css: {}
+
+gavias_edubiz.skin.violet_red:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/violet_red/bootstrap.css: {}
+      css/skins/violet_red/template.css: {}
+
+gavias_edubiz.skin.violet_red2:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/violet_red2/bootstrap.css: {}
+      css/skins/violet_red2/template.css: {}
+
+gavias_edubiz.skin.yellow:
+  version: VERSION
+  css:
+    theme: 
+      css/skins/yellow/bootstrap.css: {}
+      css/skins/yellow/template.css: {}
+
+
+gavias-edubiz-admin:
+  version: VERSION
+  css: 
+    theme: 
+      css/theme-settings.css: {}
+      vendor/colorpicker/css/colorpicker.css: {}
+      vendor/codemirror/lib/codemirror.css: {}
+      vendor/codemirror/lib/codemirror.css: {}
+      vendor/codemirror/addon/hint/show-hint.css: {}
+  js:
+      vendor/jquery-migrate.min.js: {}
+      vendor/colorpicker/js/colorpicker.js: {}
+      vendor/codemirror/lib/codemirror.js: {cope: footer}
+      vendor/codemirror/addon/hint/show-hint.js: {cope: footer}
+      vendor/codemirror/mode/css/css.js: {cope: footer}
+      js/customize.js: {}
+
+maintenance_page:
+  version: VERSION
+  css:
+    theme:
+      css/maintenance-page.css: {}
+
+views-infinite-scroll:
+  version: VERSION
+  js:
+    js/override/infinite-scroll.js : {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce

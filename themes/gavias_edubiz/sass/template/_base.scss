@@ -1,0 +1,332 @@
+html{
+  overflow-x: hidden;
+}
+body{
+  overflow-x: hidden;
+}
+
+a{
+  &:hover, &:focus, &:active{
+    @include transition(all 0.35s);
+    outline: none!important;
+    color: $theme-color;
+  } 
+}
+input, select, textarea{
+  &:hover, &:focus, &:active{
+    outline: none!important;
+  }
+}
+// images, video
+//---------------------------------
+img{
+    border: 0;
+    vertical-align: top;
+    max-width: 100%;
+    height: auto;
+}
+
+.video-responsive {
+   height        : 0;
+   padding-top   : 0;
+   padding-bottom: 56.25%;
+   position      : relative;
+   overflow      : hidden;
+   embed,iframe,object,video{
+      top     : 0;
+      left    : 0;
+      width   : 100%;
+      height  : 100%;
+      position: absolute;
+   }
+}
+
+.body-page{
+  input[type="text"], 
+  input[type="tel"],
+  input[type="password"],
+  input[type="email"],
+  textarea, select{
+    background-color: #fff;
+    //@include box-shadow(0 0 2px 2px rgba(0, 0, 0, 0.02) inset);
+    border: 1px solid $border-color;
+    padding: 5px 10px;
+    &:focus, &:active, &:hover{
+      outline: none;
+    }
+  }
+}
+.nav-tabs, .topbar ul , ul.contact-info, ul.menu{
+  list-style: none!important;
+  padding-left: 0;
+}
+
+.label{
+  color: #000!important;
+}
+
+.list-menu ul li{
+  list-style: none;
+  padding: 15px 2px;
+  font-size: $font-size-base;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+   &:last-child{
+      border-bottom: none;
+    }
+}
+
+ul {
+  margin: 0;
+  padding-left: 30px;
+  ul{
+    padding-left: 20px;
+  }
+  li{
+    list-style: inherit;
+    i{
+      margin-right: 3px;
+      font-size: 16px;
+      min-width: 20px;
+      text-align: center;
+    }
+  } 
+}
+.item-list{
+  ul li{
+    margin-left: 0;
+  }
+}
+
+ul.menu{
+  > li{
+    position: relative;
+    padding: 3px 0;
+    a{
+      padding-left: 15px;
+      @include transition(all 0.35s);
+      &:after{
+        content: "";
+        @include size(5px, 5px);
+        position: absolute;
+        top: 50%;
+        left: 1px;
+        margin-top: -3px;
+        z-index: 1;
+        background: #7D7D7D;
+        @include border-radius(50%);
+      }
+      &:hover{
+        color: $theme-color;
+        &:after{
+          background: $theme-color;
+        }
+      }
+    }
+  }
+}
+
+ul.feature-list{
+  margin-top: 30px;
+  > li{
+    padding-left: 30px;
+    position: relative;
+    margin-bottom: 5px;
+    &:after{
+      content: "\e906";
+      font-family: "gva-icon";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      z-index: 1;
+      color: $theme-color;
+    }
+  }
+}
+
+ul.inline{
+  > li{
+    float: left;
+    margin-left: 5px;
+  }
+}
+
+
+table {
+  width: 100%;
+  margin-bottom: $line-height-computed;
+  border: 1px solid $table-border-color;
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        border-color: $table-border-color;
+        border-width: 1px 1px 1px 0;
+        border-style: solid;
+      }
+    }
+  }
+  > thead > tr {
+    > th,
+    > td {
+      border-bottom-width: 2px;
+    }
+  }
+}
+
+.no-padding{
+  padding: 0!important;
+}
+
+a.disable{
+  pointer-events: none;
+  cursor: default;
+}
+
+
+/************************* Pagination ************************/
+.pager .paginations{
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0 30px;
+  padding: 4px 3px;
+  a {
+    border: 1px solid $border-color;
+    font-weight: 700;
+    display: inline-block;
+    height: 35px;
+    line-height: 34px;
+    margin: 0 1px;
+    text-align: center;
+    width: 35px;
+    margin-right: 10px;
+    &:last-child{
+      margin-right: 0;
+    }
+    &.active{
+      background: $theme-color;
+      border-color: $theme-color;
+      color: $white;
+    }
+  }
+}
+
+#edit-preview{
+  background: $theme-color;
+  color: $white;
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 8px 15px;
+  border: none;
+  &:hover{
+    background: lighten($theme-color, 10%); 
+  }
+}
+.breadcrumb-content-inner{
+  margin-bottom: 30px; 
+  text-align: center;
+  .gva-breadcrumb-content{
+    .page-title{
+      font-size: 18px;
+      float: right;
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+    .breadcrumb-links{
+      float: left;
+    }
+    .breadcrumb-content-main{
+     
+    }
+    .gva-block-breadcrumb{
+      .breadcrumb-style{ 
+        padding: 40px 0 30px;
+        margin-bottom: 45px;
+        position: relative;
+      }  
+      &.text-white, &.text-light{
+        *, .page-title{
+          color: $white;
+        } 
+        .breadcrumb-links li{
+          color: $white;
+          a{
+            color: $white;
+            &:hover{
+              color: #999999;
+            }
+          }
+        }
+      }
+    } 
+
+    .breadcrumb-links{
+      nav.breadcrumb{
+        display: inline-block;
+        li{
+          font-size: 14px;
+          font-weight: 400;
+          color: #bbbbbb;
+          text-transform: capitalize;
+          a{
+            color: $black;
+            &:hover{
+              color: $theme-color;
+            }
+          }
+        }
+      }
+    }  
+  }
+}  
+
+pre{
+  @include border-radius(0!important);
+  margin: 30px 0;
+}
+
+.simpleslider{
+  ul{
+    padding: 0;
+    li{
+      list-style: none;
+    }
+  }
+}
+
+.drupal-message{
+  background: $white;
+  max-width: 1170px;
+  margin: 0 auto;
+  position: fixed;
+  z-index: 99;
+  bottom: 0;
+  left: 50%;
+  @include translateX(-50%);
+  width: 100%;
+  max-height: 50%;
+  @include box-shadow(0px 0px 10px 3px rgba(0, 0, 0, 0.1));
+  overflow: auto;
+  .close{
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    right: 20px;
+    color: $black;
+    font-size: 15px;
+    z-index: 1;
+  }
+  .messages__wrapper{
+    padding: 2px 30px 2px 15px;
+  }
+}
+
+.text-light{
+  h1, h2, h3, h4, h5, h6{
+    color: $white;
+  }
+}
+h4, h5{
+  line-height: 1.4;
+}

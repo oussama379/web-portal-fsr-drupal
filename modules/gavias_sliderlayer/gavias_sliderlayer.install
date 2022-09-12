@@ -1,0 +1,69 @@
+<?php
+function gavias_sliderlayer_schema() {
+  $schema['gavias_sliderlayergroups'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'params' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id')
+  );
+
+  $schema['gavias_sliderlayers'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'sort_index' => array(
+        'type' => 'int',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'group_id' => array(
+        'type' => 'int',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'params' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'layersparams' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'status' => array(
+        'type' => 'int',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'background_image_uri' => array(
+        'type' => 'text',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id')
+  );
+
+  return $schema;
+  }

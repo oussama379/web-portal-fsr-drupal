@@ -1,0 +1,79 @@
+/****/
+.entity-meta {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.entity-meta details[open] {
+  background: none;
+  border: none;
+}
+
+.vertical-tabs__panes {
+  border: 0 !important;
+}
+
+.vertical-tabs__pane summary {
+  display: block !important;
+  background-color: #ccc;
+  margin-bottom: 15px;
+}
+
+.vertical-tabs__pane > summary {
+  display: none !important;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="password"],
+input[type="email"],
+textarea, select {
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.02) inset;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.02) inset;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+}
+
+input[type="text"] {
+  max-width: 300px;
+}
+
+.form-item {
+  padding-bottom: 10px;
+}
+.form-item select {
+  padding: 6px 25px 6px 6px;
+}
+
+.color-check {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 32px;
+  height: 30px;
+  display: inline-block;
+  float: left;
+  margin-right: 10px;
+}
+
+.gva-customize .details-wrapper {
+  float: left;
+}
+.gva-customize .form-type-textfield {
+  display: block;
+  width: 100%;
+  float: left;
+  max-width: 500px;
+  clear: both;
+  margin-bottom: 0;
+}
+.gva-customize .form-type-textfield label {
+  display: block;
+  width: 100%;
+  clear: both;
+}
+.gva-customize .form-type-textfield input {
+  float: left;
+  max-width: 250px;
+}
+
+.CodeMirror-gutter.CodeMirror-linenumbers{width: 29px!important;}
+.CodeMirror-sizer{margin-left: 30px!important;}

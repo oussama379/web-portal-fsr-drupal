@@ -1,0 +1,256 @@
+.form-control {
+  box-shadow: none;
+}
+
+.search-region{
+  position: absolute;
+  right: 20px;
+  top: 3px;
+}
+
+#user-login-form {
+  .form-item{
+    label{
+      width: 100%;
+    }
+    input{
+      width: 100%;
+    }
+  }
+  ul {
+    width: 100%;
+    padding: 10px 0 30px;
+      > li{
+      width: 49%;
+      float: left;
+      text-align: center;
+      &:first-child{
+        margin-right: 2%;
+      }
+      a{
+        width: 100%;
+        display: inline-block;
+        float: none;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 10px 5px;
+      }
+    }  
+  }
+}
+
+#user-login {
+  ul {
+    margin: 0 0 5px;
+    li {
+      margin: 0;
+    }
+  }
+  li.openid-link {
+    background: none;
+  }
+}
+
+#search-form{
+	.panel {
+		border: none;;
+		box-shadow: none;
+	}
+	.panel-default > .panel-heading {
+		border-bottom: none;
+	}
+}
+
+.hide-label label {
+  background: none;
+  clip: rect(1px);
+}
+.exposed-filters .form-item {
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+#article-admin-filter ul {
+  padding: .5em 0;
+  li {
+    list-style: none;
+  }
+}
+#edit-operation-wrapper select {
+  margin: .5em;
+}
+div.resizable-textarea {
+  textarea {
+    margin-top: 0;
+    border: 1px solid $border-color;
+  }
+}
+.search-advanced .criterion {
+  float: none;
+  margin: 0 5px;
+}
+#edit-keywords-fieldset .form-item {
+  &:first-child {
+    margin-top: 5px;
+  }
+}
+#user-admin-filter ul {
+  li {
+    list-style: none;
+  }
+}
+.field-type-text-long fieldset {
+  padding: 10px 0;
+  border: $border-color;
+  .form-item {
+    margin: 0;
+    padding: 0 0 0 15px;
+  }
+}
+#comment-form {
+	label {
+		display: inline-block;
+		font-size: 18px;
+		font-weight: normal;
+		margin-bottom: 5px;
+	}
+}
+#contact-site-form{
+  .form-checkbox{
+    margin-left: 0;
+  }
+}
+
+#comment-form-wrapper{
+  .form-item{
+    label{
+      min-width: 120px;
+      display: inline-block;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+  }
+}
+
+#search-block-form{
+  position: relative;
+  input.form-submit{
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 1px;
+    background: $theme-color;
+    border: none;
+    color: $white;
+    text-transform: uppercase;
+    font-weight: 700;
+    @include border-radius(0);
+    height: 34px;
+    @include transition(all 0.35s);
+    &:hover{
+      background: $black!important;
+    }
+  }
+}
+
+.contact-message-form{
+  margin: 0 auto;
+  #edit-name, #edit-mail, .js-form-item-mail{
+    height: 45px;
+    line-height: 45px;
+    background: #F6F6F6;
+    padding-left: 15px;
+  }
+  .form-item{
+    margin-bottom: 30px;
+    color: $text-color;
+    label{
+      font-size: 12px;
+      display: block;
+      text-transform: uppercase;
+    }
+    #edit-copy{
+      float: left;
+      margin-right: 5px;
+    }
+    input[type='text'], input[type='email'], textarea{
+      width: 100%;
+      border: none;
+      background: #F6F6F6;
+      position: relative;
+      @include transition(all 0.35s);
+      height: 45px;
+      -webkit-box-shadow: none!important;
+      -ms-box-shadow: none!important;
+      -o-box-shadow: none!important;
+      box-shadow: none!important;
+      padding-left: 15px;
+    }
+    textarea{
+      height: 200px;
+      padding-top: 15px;
+      @media(max-width: $screen-sm-max){
+        height: 120px;
+      }
+    }
+  }
+  .form-item-copy{
+    margin-bottom: 10px!important;
+  }
+  #edit-actions{
+    width: 100%;
+    text-align: center;
+    @include clearfix();
+  }
+  #edit-preview{
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 2px;
+    background: $theme-color;
+    font-weight: 700;
+    @include border-radius(0);
+    height: 45px;
+    @include transition(all 0.35s);
+    margin-right: 20px;
+    &:hover{
+      background: $black!important;
+    }
+  }
+  #edit-preview{
+    display: none;
+  }
+}
+
+.text-light{
+  .contact-message-form{
+    #edit-name, #edit-mail, input[type='text'], input[type='email'], textarea{
+      background: none;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: $white;
+      &::-webkit-input-placeholder {
+        color: $white;
+        text-transform: capitalize;
+      }
+      &:-moz-placeholder {
+        color: $white;
+        text-transform: capitalize;
+        @include opacity(1);
+      }
+      &::-moz-placeholder {  
+        color: $white;
+        text-transform: capitalize;
+        @include opacity(1);
+      }
+      &:-ms-input-placeholder {  
+        color: $white;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+.block-system{
+  .contact-message-form{
+    margin-bottom: 60px;
+  }
+}

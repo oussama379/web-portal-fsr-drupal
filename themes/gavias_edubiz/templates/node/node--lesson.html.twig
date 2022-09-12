@@ -1,0 +1,40 @@
+{%
+  set classes = [
+    'node',
+    'clearfix',
+  ]
+%}
+<!-- Start Display course for teaser page -->
+{% if teaser == true %} 
+  <div class="lesson-block lesson-item">
+    <i class="icon fa fa-check-square-o"></i>
+    <span class="lesson-content">
+      <span class="lesson-title"><a href="{{ url }}">{{ label }}</a>
+        {% if node.body.value is not empty %}
+          <a class="gva-pajax" href="{{ url }}" rel="bookmark">{{'Preview'|t}}</a>
+        {% endif %}
+      </span>
+      <span class="lesson-duration">{{node.field_lesson_time.value}}</span>
+    </span>
+  </div>
+<!-- End Display course for teaser page -->
+{% else %}
+<!-- Start Display course for detail page -->
+<article{{ attributes.addClass(classes) }}>
+  <div id="gva-pajax-get-content">
+    <div class="lesson-single">
+      <div class="clearfix">
+        {{ title_prefix }}
+          <h1{{ title_attributes.addClass('post-title') }}>{{ label }}</h1>
+        {{ title_suffix }}  
+        <div class="post-content">
+          <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+            {{ content|without('field_lesson_course', 'field_lesson_time', 'comment') }}
+          </div>
+        </div>  
+      </div>
+    </div>  
+  </div>    
+</article>
+<!-- End Display article for detail page -->
+{% endif %}

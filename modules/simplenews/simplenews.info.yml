@@ -1,0 +1,19 @@
+name: Simplenews
+description: 'Send newsletters to subscribed email addresses. For uninstall go to Configuration > Web services > Simplenews > Settings and hit "Prepare uninstall".'
+type: module
+package: Mail
+# core: 8.x
+dependencies:
+  - node
+  - field
+  - options
+  - views
+test_dependencies:
+  - monitoring
+configure: simplenews.newsletter_list
+
+# Information added by Drupal.org packaging script on 2017-02-14
+version: '8.x-1.0-alpha3'
+core: '8.x'
+project: 'simplenews'
+datestamp: 1487059688

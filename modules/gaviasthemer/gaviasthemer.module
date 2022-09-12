@@ -1,0 +1,413 @@
+<?php
+
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Form\FormStateInterface;
+use \Drupal\Core\Menu\MenuLinkInterface;
+use Drupal\Core\Menu\MenuLinkDefault;
+use Drupal\Core\Menu\MenuLinkContent;
+use Drupal\block\Entity\Block;
+
+define( 'GAVIASTHEMER_VERSION', '1.0' );
+define( 'GAVIASTHEMER_PATH', drupal_get_path('module', 'gaviasthemer') );
+    
+function gaviasthemer_get_blocks_options() {
+  static $_blocks_array = array();
+  if (empty($_blocks_array)) {
+    // Get default theme for user.
+    $theme_default = \Drupal::config('system.theme')->get('default');
+    // Get storage handler of block.
+    $block_storage = \Drupal::entityManager()->getStorage('block');
+    // Get the enabled block in the default theme.
+    $entity_ids = $block_storage->getQuery()->condition('theme', $theme_default)->execute();
+    $entities = $block_storage->loadMultiple($entity_ids);
+    $_blocks_array = [];
+    foreach ($entities as $block_id => $block) {
+      //if ($block->get('settings')['provider'] != 'tb_megamenu') {
+        $_blocks_array[$block_id] = $block->label();
+      //}
+    }
+    asort($_blocks_array);
+  }
+  return $_blocks_array;
+}
+
+function gaviasthemer_render_block($key) {
+  $block = \Drupal\block\Entity\Block::load($key);
+  $block_content = \Drupal::entityManager()
+    ->getViewBuilder('block')
+    ->view($block);
+
+return drupal_render($block_content);
+
+  }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for menu_link_content_form.
+ */
+function gaviasthemer_form_menu_link_content_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $menuLink = _gaviasthemer_get_menu_link_entity_from_form_state($form_state);
+  $linkOptions = $menuLink->link->first()->options;
+  $linkAttributes = !empty($linkOptions['attributes']) ? $linkOptions['attributes'] : array();
+
+  // Add attributes to the menu item.
+  $form['options']['attributes'] = array(
+    '#type' => 'details',
+    '#title' => t('Menu item attributes'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#tree' => TRUE,
+  );
+
+  $form['options']['attributes']['gva_class'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Classes'),
+    '#description' => t('Enter additional classes to be added to the menu item.'),
+    '#default_value' => !empty($linkAttributes['gva_class']) ? $linkAttributes['gva_class'] : '',
+  );
+
+  $form['options']['attributes']['gva_icon'] = array(
+    '#title' => 'Menu icon',
+    '#type' => 'textfield',
+    '#default_value' => !empty($linkAttributes['gva_icon']) ? $linkAttributes['gva_icon'] : '',
+    '#description' => 'This support display icon from FontAwsome, Please click <a href="//fortawesome.github.io/Font-Awesome/" target="_blank"">here to see the list</a>'
+  );
+
+  $form['options']['attributes']['gva_layout'] = array(
+    '#title' => 'Choose Menu Style',
+    '#type' => 'select',
+    '#options'  => array(
+        'menu-list'         => 'List',
+        'menu-grid'         => 'Columns',
+        'menu-block'        => 'Mega menu block drupal'
+    ),
+    '#default_value' => !empty($linkAttributes['gva_layout']) ? $linkAttributes['gva_layout'] : 'menu-list',
+    '#states'   => array(
+        'visible' => array(
+            ':input[name="parent"]' => array(
+                array('value' => 'main:0'),
+            ),
+        ),
+    ),
+  );
+
+  $form['options']['attributes']['gva_layout_columns'] = array(
+    '#title'  => 'Choose Number of Columns',
+    '#type'   => 'select',
+    '#options'    => array(
+        '2'       => '2',
+        '3'       => '3',
+        '4'       => '4',
+        '5'       => '5',
+    ),
+    '#default_value' => !empty($linkAttributes['gva_layout_columns']) ? $linkAttributes['gva_layout_columns'] : '3',
+    '#states'   => array(
+        'visible' => array(
+            ':input[name="gva_layout"]' => array(
+                array('value' => 'menu-grid'),
+            ),
+        ),
+    ),
+  );
+
+  $form['options']['attributes']['gva_block'] = array(
+    '#title'  => 'Choose Block of drupal (Default)',
+    '#type'   => 'select',
+    '#options'    => gaviasthemer_get_blocks_options(),
+    '#default_value' => !empty($linkAttributes['gva_block']) ? $linkAttributes['gva_block'] : '',
+  );
+  
+  $languagesAll = \Drupal::languageManager()->getLanguages();
+  if(count($languagesAll) > 1){
+    foreach ($languagesAll as $key => $language) {
+      $form['options']['attributes']['gva_block_' . $language->getID()] = array(
+        '#title'  => 'Choose Block of drupal (' . $language->getID() . ')',
+        '#type'   => 'select',
+        '#options'    => gaviasthemer_get_blocks_options(),
+        '#default_value' => !empty($linkAttributes['gva_block_' . $language->getID()]) ? $linkAttributes['gva_block_' . $language->getID()] : '',
+      );
+    }
+  }
+
+  $form['actions']['submit']['#submit'][] = 'gaviasthemer_form_menu_link_content_form_submit';
+}
+
+/**
+ * Additional submit handler for menu_link_content_form.
+ */
+function gaviasthemer_form_menu_link_content_form_submit(array &$form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+  $attributes = array();
+
+  foreach ($values['attributes'] as $attribute => $value) {
+    $value = trim($value);
+    if (!empty($value)) {
+      $attributes[$attribute] = $value;
+    }
+  }
+
+  $menuLinkEntity = _gaviasthemer_get_menu_link_entity_from_form_state($form_state);
+  $options = $menuLinkEntity->link->first()->options;
+  $changed = FALSE;
+  if (empty($attributes)) {
+    if (!empty($options['attributes'])) {
+      unset($options['attributes']);
+      $changed = TRUE;
+    }
+  }
+  else {
+    $options['attributes'] = $attributes;
+    $changed = TRUE;
+  }
+
+  if ($changed) {
+    $menuLinkEntity->link->first()->options = $options;
+    $menuLinkEntity->save();
+  }
+}
+
+function _gaviasthemer_get_menu_link_entity_from_form_state(FormStateInterface $form_state) {
+  $buildInfo = $form_state->getBuildInfo();
+  $menuLinkContentForm = $buildInfo['callback_object'];
+  return $menuLinkContentForm->getEntity();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function gaviasthemer_form_block_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\block\BlockInterface $block */
+  $block = $form_state->getFormObject()->getEntity();
+  $_id = $block->ID();
+  //print "<pre>";print_r($block->getPluginId());die();
+  
+  // This will automatically be saved in the third party settings.
+
+  $form['breadcrumb_background_image']['#tree'] = TRUE;
+  $form['third_party_settings']['#tree'] = TRUE;
+  //Add fields for breadcrumb
+ // print \Drupal::config('gaviasthemer.settings')->get('breadcrumb_background_image_path_' . $_id);
+  
+  if($block->getPluginId() == 'system_breadcrumb_block'){
+    
+    $form['breadcrumb_background_image']['file_upload'] = array(
+      '#type' => 'file',
+      '#title' => t('Breadcrumb | Background Image'),
+      '#description' => t('Upload a file, allowed extensions: jpg, jpeg, png, gif')
+    );
+
+    $form['third_party_settings']['gaviasthemer']['breadcrumb_background_image_path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Breadcrumb | Background Image Path'),
+      '#default_value' => \Drupal::config('gaviasthemer.settings')->get('breadcrumb_background_image_path_' . $_id)
+    );
+
+    $form['third_party_settings']['gaviasthemer']['breadcrumb_background_color'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Breadcrumb | Background Color'),
+      '#description' => t('Setting background color for breadcrumb. eg: #f5f5f5;'),
+      '#default_value' => $block->getThirdPartySetting('gaviasthemer', 'breadcrumb_background_color'),
+    );
+
+    $form['third_party_settings']['gaviasthemer']['breadcrumb_background_position'] = array(
+      '#type' => 'select',
+      '#title' => t('Breadcrumb | Background Position'),
+      '#description' => t('Setting background position for breadcrumb.'),
+      '#options' => array(
+        'center top'        => t('center top'),
+        'center right'      => t('center right'),
+        'center bottom'     => t('center bottom'),
+        'center center'     => t('center center'),
+        'left top'          => t('left top'),
+        'left center'       => t('left center'),
+        'left bottom'       => t('left bottom'),
+        'right top'         => t('right top'),
+        'right center'      => t('right center'),
+        'right bottom'      => t('right bottom')
+      ),
+      '#default_value' => $block->getThirdPartySetting('gaviasthemer', 'breadcrumb_background_position'),
+    );
+
+    $form['third_party_settings']['gaviasthemer']['breadcrumb_background_repeat'] = array(
+      '#type' => 'select',
+      '#title' => t('Breadcrumb | Background Repeat'),
+      '#description' => t('Setting background pepeat for breadcrumb.'),
+      '#options' => array(
+        'no-repeat'         => t('no-repeat'),
+        'repeat'            => t('repeat'),
+        'repeat-x'          => t('repeat-x'),
+        'repeat-y'          => t('repeat-y')
+      ),
+      '#default_value' => $block->getThirdPartySetting('gaviasthemer', 'breadcrumb_background_repeat'),
+    );
+
+    $form['third_party_settings']['gaviasthemer']['breadcrumb_color_style'] = array(
+      '#type' => 'select',
+      '#title' => t('Breadcrumb | Color Style'),
+      '#description' => t('Setting color style for breadcrumb.'),
+      '#options' => array(
+        'text-dark'          => t('Text dark'),
+        'text-light'         => t('Text light')
+      ), 
+      '#default_value' => $block->getThirdPartySetting('gaviasthemer', 'breadcrumb_color_style'),
+    );
+
+  }
+
+  $form['third_party_settings']['gaviasthemer']['classes'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CSS class(es)'),
+    '#description' => t('Customize the styling of this block by adding CSS classes. Separate multiple classes by spaces.'),
+    '#default_value' => $block->getThirdPartySetting('gaviasthemer', 'classes'),
+  );
+
+    $form['actions']['submit']['#submit'][] = 'gaviasthemer_form_block_form_submit';
+    $form['#validate'][] = 'gaviasthemer_form_block_form_validate';
+}
+
+ function gaviasthemer_form_block_form_validate(array &$form, FormStateInterface $form_state) {
+   
+  $block = $form_state->getFormObject()->getEntity();
+  $values = $form_state->getValues();
+   
+  if($block->getPluginId() == 'system_breadcrumb_block'){
+
+      if (\Drupal::moduleHandler()->moduleExists('file')) {
+        // Handle file uploads.
+        $validators = array('file_validate_is_image' => array());
+
+        // Check for a new uploaded logo.
+        $file = file_save_upload('breadcrumb_background_image', $validators, FALSE, 0);
+        if (isset($file)) {
+          // File upload was attempted.
+          if ($file) {
+            // Put the temporary file in form_values so we can save it on submit.
+            $form_state->setValue('breadcrumb_background_image_tmp', $file);
+          }
+          else {
+            // File upload failed.
+            $form_state->setValue('breadcrumb_background_image_tmp', '');
+            $form_state->setErrorByName('breadcrumb_background_image_error', $this->t('The logo could not be uploaded.'));
+          }
+        }
+        $validators = array('file_validate_extensions' => array('ico png gif jpg jpeg apng svg'));
+      }
+    }
+  }
+
+  function gaviasthemer_form_block_form_submit(array &$form, FormStateInterface &$form_state) {
+    $block = $form_state->getFormObject()->getEntity();
+    $_id = $block->ID();
+
+    if($block->getPluginId() == 'system_breadcrumb_block'){
+      $values = $form_state->getValues();
+      if( isset($values['breadcrumb_background_image_tmp']) && !empty($values['breadcrumb_background_image_tmp']) ) {
+        $filename = file_unmanaged_copy($values['breadcrumb_background_image_tmp']->getFileUri());
+        if (!empty($filename)) {
+          \Drupal::configFactory()->getEditable('gaviasthemer.settings')
+          ->set('breadcrumb_background_image_path_' . $_id, gaviasthemer_validate_path($filename))
+          ->save();
+        }
+      }
+    }
+  }    
+
+ function gaviasthemer_validate_path($path) {
+  // Absolute local file paths are invalid.
+  if (drupal_realpath($path) == $path) {
+    return FALSE;
+  }
+  // A path relative to the Drupal root or a fully qualified URI is valid.
+  if (is_file($path)) {
+    return $path;
+  }
+  // Prepend 'public://' for relative file paths within public filesystem.
+  if (file_uri_scheme($path) === FALSE) {
+    $path = 'public://' . $path;
+  }
+  if (is_file($path)) {
+    return $path;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function gaviasthemer_preprocess_block(&$variables) {
+  // Blocks coming from page manager widget does not have id.
+  if (!empty($variables['elements']['#id'])) {
+    $block = Block::load($variables['elements']['#id']);
+    if ($classes = $block->getThirdPartySetting('gaviasthemer', 'classes')) {
+      $variables['attributes']['class'][] = $classes;
+    }
+  }
+}
+
+
+
+function gaviasthemer_writecache( $folder, $file, $value, $e='css' ){
+  $file   = $folder  . preg_replace('/[^A-Z0-9\._-]/i', '', $file).'.'.$e ;
+  $handle = fopen($file, 'w+');
+    fwrite($handle, ($value));
+    fclose($handle);
+}
+
+/**
+* Implements hook_entity_view_alter().
+*/
+function gaviasthemer_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  // Cheking view_mode for node.
+  if ($build['#view_mode'] === 'full' && $entity Instanceof \Drupal\node\NodeInterface) {
+    // Cheking html_head_link on attached tags in head.
+    if (!isset($build['#attached']['html_head_link'])) return;
+    // Array to unset.
+    $gaviasthemer = [
+      'delete-form',
+      'edit-form',
+      'version-history',
+      'revision'
+    ];
+    // Unset loop.
+    foreach ($build['#attached']['html_head_link'] as $key => $value) {
+      if (isset($value[0]['rel']) && in_array($value[0]['rel'], $gaviasthemer)) unset($build['#attached']['html_head_link'][$key]);
+    }
+  }
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function gaviasthemer_page_attachments_alter(array &$attachments) {
+  // Array to unset.
+  $gaviasthemer = [
+    'delete-form',
+    'edit-form',
+    'version-history',
+    'revision'
+  ];
+  // Unset loop.
+  if(isset($attachments['#attached']['html_head_link']) && is_array($attachments['#attached']['html_head_link'])){
+    foreach ($attachments['#attached']['html_head_link'] as $key => $value) {
+      if (isset($value[0]['rel']) && in_array($value[0]['rel'], $gaviasthemer)) unset($attachments['#attached']['html_head_link'][$key]);
+    }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function gaviasthemer_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'page_attachments_alter') {
+    $group = $implementations['gaviasthemer'];
+    unset($implementations['gaviasthemer']);
+    $implementations['gaviasthemer'] = $group;
+  }
+}
+
+function gaviasthemer_update_projects_alter(&$projects){
+   unset($projects['gaviasthemer']);
+   unset($projects['Gaviasthemer']);
+}
+
+

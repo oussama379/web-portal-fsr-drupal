@@ -1,0 +1,23 @@
+services:
+  plugin.manager.simplenews_recipient_handler:
+    class: Drupal\simplenews\RecipientHandler\RecipientHandlerManager
+    parent: default_plugin_manager
+  simplenews.spool_storage:
+    class: Drupal\simplenews\Spool\SpoolStorage
+    arguments: ['@database', '@lock', '@config.factory', '@module_handler']
+  logger.channel.simplenews:
+    parent: logger.channel_base
+    arguments: ['simplenews']
+  simplenews.mailer:
+    class: Drupal\simplenews\Mail\Mailer
+    arguments: ['@simplenews.spool_storage', '@plugin.manager.mail', '@state', '@logger.channel.simplenews', '@account_switcher', '@lock', '@config.factory']
+  simplenews.mail_builder:
+    class: Drupal\simplenews\Mail\MailBuilder
+    arguments: ['@token', '@config.factory', '@simplenews.subscription_manager']
+  simplenews.subscription_manager:
+    class: Drupal\simplenews\Subscription\SubscriptionManager
+    arguments: ['@language_manager', '@config.factory', '@simplenews.mailer', '@token', '@logger.channel.simplenews', '@current_user']
+    tags:
+      - { name: needs_destruction }
+  simplenews.mail_cache:
+    class: Drupal\simplenews\Mail\MailCacheBuild

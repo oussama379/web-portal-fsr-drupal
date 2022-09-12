@@ -1,0 +1,20 @@
+{% if attributes -%}
+  <div{{ attributes }}>
+{% endif %}
+   
+  {% if title %}
+    <h3>{{ title }}</h3>
+  {% endif %}
+
+  <div class="gva-view-grid-inner lg-block-grid-{{ class_grid.items_lg }} md-block-grid-{{class_grid.items_md}} sm-block-grid-{{class_grid.items_sm}} xs-block-grid-{{class_grid.items_xs}}">
+
+    {% for row in rows %}
+        <div class="item-columns">
+          <div{{ row.attributes }}>{{ row.content|raw }}</div>
+        </div>
+    {% endfor %}
+  </div>
+    
+{% if attributes -%}
+    </div>
+{% endif %}

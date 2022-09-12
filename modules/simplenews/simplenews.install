@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the simplenews module
+ */
+
+use Drupal\simplenews\Entity\Newsletter;
+
+/**
+ * Implements hook_schema().
+ */
+function simplenews_schema() {
+  $schema['simplenews_mail_spool'] = array(
+    'description' => 'Spool for temporary storage of newsletter emails.',
+    'fields' => array(
+      'msid' => array(
+        'description' => 'The primary identifier for a mail spool record.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'mail' => array(
+        'description' => 'The formatted email address of mail message recipient.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_type' => array(
+        'description' => 'The entity type of this newsletter issue.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'The entity id of this newsletter issue.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'newsletter_id' => array(
+        'description' => 'The {simplenews_newsletter}.id this issue belongs to.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'status' => array(
+        'description' => 'The sent status of the email (0 = hold, 1 = pending, 2 = done).',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'error' => array(
+        'description' => 'A boolean indicating whether an error occured while sending the email.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'The time status was set or changed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'data' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'A serialized array of name value pairs that are related to the email address.',
+      ),
+      'snid' => array(
+        'description' => 'Foreign key for subscriber table ({simplenews_subscriber}.id)',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('msid'),
+    'indexes' => array(
+      'newsletter_id' => array('newsletter_id'),
+      'status' => array('status'),
+      'snid_newsletter_id' => array('snid', 'newsletter_id'),
+    ),
+    'foreign keys' => array(
+      'newsletter_id' => array(
+        'table' => 'simplenews_newsletter',
+        'columns' => array('newsletter_id'),
+      ),
+      'snid_newsletter_id' => array(
+        'table' => 'simplenews_subscription',
+        'columns' => array(
+          'snid' => 'snid',
+          'newsletter_id' => 'newsletter_id',
+        ),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function simplenews_install() {
+  if (\Drupal::service('config.installer')->isSyncing()) {
+    return;
+  }
+
+  // Set the default values for test_address, from_address and from_name.
+  $site_mail = \Drupal::config('system.site')->get('mail');
+  $site_name = \Drupal::config('system.site')->get('name');
+
+  $config = $config = \Drupal::configFactory()->getEditable('simplenews.settings');
+  if (empty($site_mail)) {
+    $site_mail = ini_get('sendmail_from');
+  }
+  $config->set('newsletter.from_address', $site_mail);
+
+  if (empty($site_name)) {
+    $site_name = 'Drupal';
+  }
+  $config->set('newsletter.from_name', $site_name);
+  $config->save(TRUE);
+
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('subscribe to newsletters'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('subscribe to newsletters'));
+
+  // Init the default newsletter.
+  $newsletter = Newsletter::load('default');
+  $newsletter->from_name = $site_name;
+  $newsletter->from_address = $site_mail;
+  $newsletter->trustData();
+  $newsletter->save();
+}
+
+

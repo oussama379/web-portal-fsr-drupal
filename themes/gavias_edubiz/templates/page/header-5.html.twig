@@ -1,0 +1,76 @@
+<header id="header" class="header-v5">
+
+  {% set class_sticky = '' %}
+  {% if sticky_menu == 1 %}
+    {% set class_sticky = 'gv-sticky-menu' %}
+  {% endif %}  
+
+  <div class="header-main">
+    <div class="container">
+      <div class="header-inner clearfix">
+        <div class="row">
+          <div class="col-md-4 col-sm-4 col-xs-5">
+            {% if page.language %}
+              <div class="language-box">{{page.language}}</div>
+            {% endif %} 
+          </div>
+          <div class="col-md-4 col-sm-4 col-xs-7 branding">
+            {% if page.branding %}
+              {{ page.branding }}
+            {% endif %}
+          </div>
+          <div class="col-md-4 col-sm-4 col-xs-12 hidden-xs">
+            <div class="box-user">
+              <a href="{{login_link}}">{{'Login'|t}}</a>
+              <a class="register" href="{{register_link}}">{{'Sign up'|t}}</a>
+            </div>
+          </div>
+        </div>  
+      </div>
+    </div>  
+  </div>
+
+  <div class="main-menu {{ class_sticky }}">
+    <div class="container header-content-layout">
+      <div class="header-main-inner p-relative">
+        <div class="row">
+          <div class="col-md-12 col-sm-12 col-xs-12 p-static">
+            <div class="area-main-menu">
+              <div class="area-inner">
+                <div class="gva-offcanvas-mobile">
+                  <div class="close-offcanvas hidden"><i class="fa fa-times"></i></div>
+                  {% if page.main_menu %}
+                    {{ page.main_menu }}
+                  
+                  {% endif %}  
+                  {% if page.offcanvas %}
+                    <div class="after-offcanvas hidden">
+                      {{ page.offcanvas }}
+                    </div>
+                 {% endif %}
+                </div>
+                  
+                <div id="menu-bar" class="menu-bar hidden-lg hidden-md">
+                  <span class="one"></span>
+                  <span class="two"></span>
+                  <span class="three"></span>
+                </div>
+                
+                {% if page.search %}
+                  <div class="gva-search-region search-region">
+                    <span class="icon"><i class="fa fa-search"></i></span>
+                    <div class="search-content">  
+                      {{ page.search }}
+                    </div>  
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>

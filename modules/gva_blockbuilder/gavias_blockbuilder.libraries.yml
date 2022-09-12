@@ -1,0 +1,50 @@
+gavias_blockbuilder.assets.admin:
+  version: 1.x
+  css:
+    theme:
+      assets/css/admin.css: {}
+      vendor/font-awesome/css/font-awesome.min.css: {}
+      vendor/notify/styles/metro/notify-metro.css: {}
+      assets/css/admin.css: {}
+  js:
+    vendor/jquery-migrate.min.js: {}
+    assets/js/datepicker.min.js: { scope: footer }
+    assets/js/admin.js: { scope: footer }
+    assets/js/fields/upload/jquery.ui.widget.js: { scope: footer }
+    assets/js/fields/upload/jquery.iframe-transport.js: { scope: footer }
+    assets/js/fields/upload/jquery.fileupload.js: { scope: footer  }
+    assets/js/fields/upload/script.js: { scope: footer }
+    assets/js/fields/tabs/tabs.js: { scope: footer }
+    vendor/notify/notify.min.js: { scope: footer }
+    vendor/notify/styles/metro/notify-metro.js: { scope: footer }
+
+    assets/js/admin.js: { scope: footer }
+
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.ui.draggable
+    - core/jquery.ui.sortable
+    - core/jquery.ui.dropable
+    - core/jquery.ui.dialog 
+
+gavias_blockbuilder.assets.field:
+  version: 1.x
+  css:
+    theme:
+      vendor/magnific/magnific-popup.css: {}
+      assets/css/field.css: {}
+  js:
+    vendor/magnific/jquery.magnific-popup.js: { scope: footer }
+    assets/js/admin.field.js: { scope: footer }
+
+gavias_blockbuilder.assets.frontend:
+  version: 1.x
+  css: 
+    theme:
+      assets/css/frontend.css: {}
+  js:
+    vendor/skrollr.min.js: {cope: footer}
+    vendor/main.js: {cope: footer}

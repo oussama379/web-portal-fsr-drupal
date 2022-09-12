@@ -1,0 +1,16 @@
+<article class="testimonial-node-v2">      
+   <div class="testimonial-content">
+      <div class="avatar">{{ fields.field_testimonial_avatar.content }} </div>
+      <div class="content">
+         <div class="content-inner text-left">
+            <div class="quote">
+               {{ fields.body.content|striptags|trim }}
+            </div>  
+            <div class="info">
+               <span class="title"> {{ fields.field_testimonial_name.content }}</span><span> - </span>
+               <span class="job"> {{ fields.field_testimonial_job.content }}</span>
+            </div>   
+         </div>    
+      </div>
+   </div>
+</article>

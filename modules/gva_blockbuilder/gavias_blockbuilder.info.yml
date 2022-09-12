@@ -1,0 +1,11 @@
+name: Gavias Block Builder v2
+type: module
+description: Gavias Block Builder module.
+dependencies:
+# core: 8.x
+package: gavias
+# Information added by Drupal.org packaging script on 2015-08-14
+version: '8.x-1.0'
+core: '8.x'
+project: 'gavias_blockbuilder'
+datestamp: 1439548441

@@ -1,0 +1,28 @@
+id: d7_simplenews_newsletter
+dependencies:
+  module:
+    - migrate_drupal
+    - simplenews
+label: Simplenews newsletters
+migration_tags:
+  - Drupal 7
+source:
+  plugin: simplenews_newsletter
+process:
+  name: name
+  id:
+    plugin: machine_name
+    source: name
+  description: description
+  format: format
+  priority: priority
+  receipt: receipt
+  from_name: from_name
+  subject: email_subject
+  from_address: from_address
+  hyperlinks: hyperlinks
+  new_account: new_account
+  opt_inout: opt_inout
+  weight: weight
+destination:
+  plugin: entity:simplenews_newsletter

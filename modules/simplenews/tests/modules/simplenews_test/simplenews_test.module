@@ -1,0 +1,23 @@
+<?php
+/**
+ * @file
+ * Hook implementations for the Simplenews Test module.
+ */
+
+use Drupal\simplenews\SkipMailException;
+
+/**
+ * Implements hook_mail_alter().
+ */
+function simplenews_test_mail_alter(&$message) {
+  if ($message['id'] == 'simplenews_node') {
+    /** @var \Drupal\simplenews\Mail\MailInterface $mail */
+    $mail = $message['params']['simplenews_mail'];
+    $entity = $mail->getEntity();
+    if (!empty($entity->body->value)) {
+      if ($entity->body->value == 'Nothing interesting') {
+        throw new SkipMailException('There was nothing interesting to send.');
+      }
+    }
+  }
+}

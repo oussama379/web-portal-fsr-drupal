@@ -1,0 +1,6 @@
+gavias_sl_group.admin:
+  title: 'Gavias Slider Layer'
+  description: 'List of slider items'
+  parent: system.admin_structure
+  route_name: gavias_sl_group.admin
+

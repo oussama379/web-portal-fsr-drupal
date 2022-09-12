@@ -1,0 +1,123 @@
+gavias_sl_group.admin:
+  path: '/admin/structure/gavias_sliderlayer'
+  defaults:
+    _title: 'Gavias Group SliderLayer'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\GroupSliderController::gavias_sl_group_list'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.add:
+  path: '/admin/structure/gavias_sliderlayer/group-form/{sid}'
+  defaults:
+    _title: 'Add Group Slider'
+    _form: '\Drupal\gavias_sliderlayer\Form\GroupForm'
+  requirements: 
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.clone:
+  path: '/admin/structure/gavias_sliderlayer/group-clone/{sid}'
+  defaults:
+    _title: 'Add Group Slider'
+    _form: '\Drupal\gavias_sliderlayer\Form\GroupClone'
+  requirements: 
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.config:
+  path: '/admin/structure/gavias_sliderlayer/config-global/{gid}'
+  defaults:
+    _title: 'Configuration of Gavias Slider Group'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\GroupSliderController::gavias_sl_group_config'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.config_save:
+  path: '/admin/structure/gavias_sliderlayer/config-global/save'
+  defaults:
+    _title: 'Save configuration of Gavias Slider Group'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\GroupSliderController::gavias_sl_group_config_save'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.export:
+  path: '/admin/structure/gavias_sliderlayer/group/export/{gid}'
+  defaults:
+    _title: 'Export'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\GroupSliderController::gavias_sl_group_export'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.import:
+  path: '/admin/structure/gavias_sliderlayer/group/import/{gid}'
+  defaults:
+    _title: 'Import'
+    _form: '\Drupal\gavias_sliderlayer\Form\ImportForm'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_group.admin.delete:
+  path: '/admin/structure/gavias_sliderlayer/group/delete/{gid}/{sid}/{action}'
+  defaults:
+    _title: 'Delete item of Gavias Slider'
+    _form: '\Drupal\gavias_sliderlayer\Form\DelForm'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+
+# gavias_sl_group.admin.edit:
+#   path: '/admin/structure/gavias_sliderlayer/edit/{sid}'
+#   defaults:
+#     _title: 'Edit Slider'
+#     _controller: '\Drupal\gavias_sliderlayer\Controller\GroupSliderController::gavias_sliderlayer_edit'
+#   requirements:
+#     _permission: 'administer gaviassliderlayer'
+
+
+# List slider layer
+gavias_sl_sliders.admin.list:
+  path: '/admin/structure/gavias_sliderlayer/{gid}/sliders'
+  defaults:
+    _title: 'Gavias SliderLayer'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\SliderController::gavias_sl_sliders_list'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_sliders.admin.form:
+  path: '/admin/structure/gavias_sliderlayer/{gid}/sliders/{sid}/edit'
+  defaults:
+    _title: 'Edit Slider'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\SliderController::gavias_sl_sliders_edit'
+  requirements: 
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_sliders.admin.save:
+  path: '/admin/structure/gavias_sliderlayer/sliders/save'
+  defaults:
+    _title: 'Edit Slider'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\SliderController::gavias_sliderlayer_save'
+  requirements: 
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sl_sliders.admin.duplicate:
+  path: '/admin/structure/gavias_sliderlayer/slider-duplicate/{id}'
+  defaults:
+    _title: 'Slider Duplicate'
+    _form: '\Drupal\gavias_sliderlayer\Form\SliderDuplicate'
+  requirements: 
+    _permission: 'administer gaviassliderlayer'
+
+# File slider layer
+gavias_sliderlayer.admin.upload:
+  path: '/admin/structure/gavias_sliderlayer/upload'
+  defaults:
+    _title: 'Upload image of Gavias Slider'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\FileController::gavias_sliderlayer_upload_file'
+  requirements:
+    _permission: 'administer gaviassliderlayer'
+
+gavias_sliderlayer.admin.get_images_upload:
+  path: '/admin/structure/gavias_sliderlayer/get_images_upload'
+  defaults:
+    _title: 'Save configuration of Gavias SliderLayer'
+    _controller: '\Drupal\gavias_sliderlayer\Controller\FileController::get_images_upload'
+  requirements:
+    _permission: 'administer gaviassliderlayer'

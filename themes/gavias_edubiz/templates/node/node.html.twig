@@ -1,0 +1,39 @@
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'clearfix',
+  ]
+%}
+
+
+<article{{ attributes.addClass(classes)|without('about') }}>
+  <header>
+    {{ title_prefix }}
+    
+    <div class="widget gsc-heading  align-left style-1 padding-bottom-20">
+      <h2{{ title_attributes.addClass('node__title title') }}>
+        <span><a href="{{ url }}" rel="bookmark">{{ label }}</a></span><span class="heading-line"></span>
+      </h2>
+    </div>
+      
+    {% set title_suffix = '' %}
+    {{ title_suffix }}
+    {% if display_submitted %}
+      <div class="node__meta">
+        {{ author_picture }}
+        <span{{ author_attributes }}>
+          {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        </span>
+        {{ metadata }}
+      </div>
+    {% endif %}
+  </header>
+  <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
+    {{ content }}
+  </div>
+</article>

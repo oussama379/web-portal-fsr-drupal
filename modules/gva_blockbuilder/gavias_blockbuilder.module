@@ -1,0 +1,293 @@
+<?php
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\gavias_blockbuilder\includes\core\gavias_sc;
+
+define( 'GAVIAS_BLOCKBUILDER_VERSION', '1.0' );
+define( 'GAVIAS_BLOCKBUILDER_PATH', drupal_get_path('module', 'gavias_blockbuilder') );
+
+module_load_include('php','gavias_blockbuilder', 'includes/core/model');
+module_load_include('php','gavias_blockbuilder', 'includes/core/shortcode');
+module_load_include('php','gavias_blockbuilder', 'includes/core/gavias_sc');
+module_load_include('php','gavias_blockbuilder', 'includes/define');
+module_load_include('php','gavias_blockbuilder', 'includes/utilities');
+module_load_include('php','gavias_blockbuilder', 'includes/general_shortcodes');
+module_load_include('php','gavias_blockbuilder', 'includes/core/fields');
+module_load_include('php','gavias_blockbuilder', 'includes/frontend');
+module_load_include('php','gavias_blockbuilder', 'includes/oembed');
+module_load_include('php','gavias_blockbuilder', 'includes/shortcode_block');
+
+function gavias_blockbuilder_theme_name(){
+  $default_theme = \Drupal::config('system.theme')->get('default');
+  $theme_name = $default_theme;
+  $theme_handler = \Drupal::service('theme_handler');
+  if($theme_handler->themeExists($default_theme)){
+    $theme_handler = $theme_handler->getTheme($default_theme);
+    $theme_info = $theme_handler->info;
+    if(isset($theme_info['base theme']) && !empty($theme_info['base theme']) && strpos($theme_info['base theme'], 'avias_')){
+      $theme_name = $theme_info['base theme'];
+    }
+  }
+  return $theme_name;
+}
+
+$theme_load_elements = gavias_blockbuilder_theme_name();
+if(file_exists(drupal_get_path('theme', $theme_load_elements) . '/gva_elements/elements.php')){
+  require drupal_get_path('theme', $theme_load_elements) . '/gva_elements/elements.php';
+  $shortcodes = [];
+  if(function_exists('gavias_blockbuilder_get_elements')) $shortcodes = gavias_blockbuilder_get_elements();
+  foreach( $shortcodes as $sc ){
+    if(file_exists(drupal_get_path('theme', $theme_load_elements) . '/gva_elements/' . $sc . '.php')){
+      $sc_path = drupal_get_path('theme', $theme_load_elements) . '/gva_elements/' . $sc . '.php';
+      require($sc_path);
+      $_class = '\\Drupal\gavias_blockbuilder\shortcodes\\' . $sc;
+      if( class_exists($_class) ){
+        $s = new $_class;
+        if(method_exists($s, 'load_shortcode') && function_exists('add_shortcode')){
+          $s->load_shortcode();
+        }
+      }
+    }
+  }
+}
+
+function gavias_blockbuilder_imce(){
+  if (\Drupal::moduleHandler()->moduleExists('imce')) {
+    return true;
+  }
+  return false;
+}
+
+function gavias_blockbuilder_theme($existing, $type, $theme, $path) {
+  $items['admin-form'] = array(
+    'variables' => array(
+      'content' => '',
+    ),
+    'path' => $path . '/templates/backend',
+  );
+  $items['block-builder'] = array(
+     'variables'  => array(
+      'content'   => '',
+      'edit_url'  => ''
+    ),
+     'path' => $path . '/templates/frontend',
+  );
+  return $items;
+}  
+
+function gavias_blockbuilder_preprocess_html(&$vars){
+  $vars['classes_array'][] = "gavias_blockbuilder";
+  $vars['#attached']['library'][] = 'gavias_blockbuilder/gavias_blockbuilder.assets.frontend';
+}
+
+function gavias_blockbuilder_block_view($delta = '') {
+  $block = array();
+  if (str_replace('gavias_blockbuilder_block____', '', $delta) != $delta) {
+    $bid = str_replace('gavias_blockbuilder_block____', '', $delta);
+    $block['content'] = menu_tree($delta);
+    $block['content']['#markup'] = gavias_blockbuilder_block_content($bid);
+    $block['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($delta));
+  }
+  return $block;
+}
+
+function gavias_blockbuilder_preprocess_blockbuilder(&$vars){
+  require_once GAVIAS_BLOCKBUILDER_PATH .'/includes/frontend.php';
+  $vars['theme_hook_suggestions'][] = 'blockbuilder__block';
+  $params = $vars['params'];
+  $id = $vars['id'];
+	$html_id = drupal_html_id('gavias-blockbuilder-' . $id);
+	$vars['id'] = $html_id;
+	$vars['attributes_array']['id'] = $html_id;
+	$vars['content'] = $params;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
+ */
+function gavias_blockbuilder_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  if($is_admin){
+    $form['#attached']['library'][] = 'gavias_blockbuilder/gavias_blockbuilder.assets.field';
+  }
+  $form['#attached']['drupalSettings']['gavias_blockbuilder']['url_edit'] = \Drupal::url('gavias_blockbuilder.admin.edit', array('bid'=>'-----'));
+  if( $form_id == 'node_page_edit_form' || $form_id == 'node_page_form' || $form_id == 'node_service_edit_form' || $form_id == 'node_service_form'){
+    $results = db_select('{gavias_blockbuilder}', 'd')
+      ->fields('d', array('id', 'title', 'body_class'))
+      ->orderBy('title', 'ASC')
+      ->execute();
+
+    $list_gbb = array( ''   => 'Disable');
+    foreach ($results as $key => $result) {
+      $list_gbb[$result->id] = $result->title . ' (' . $result->body_class . ')';
+    }
+
+  $node = $form_state->getFormObject()->getEntity();
+    $form['gavias_blockbuilder_layout'] = array(
+      '#type' => 'details',
+      '#title' => t('Layout settings'),
+      '#group' => 'advanced',
+      '#open'   => TRUE,
+      '#attributes' => array(
+        'class' => array('gva-layout-form'),
+      ),
+      '#weight' => 30,
+    );
+    
+    $form['gavias_blockbuilder_layout']['gva_layout'] = array(
+      '#type' => 'select',
+      '#title' => 'Layout',
+      '#default_value' => \Drupal::config('gavias_blockbuilder.settings')->get('gva-layout-' . $node->id()),
+      '#options'  => array(
+      	''   => 'Default',
+        'fw' => 'Fullwith no sidebar (use for block builder)',
+        'fw_sidebar' => 'Fullwidth width sidebar',
+        'container_sidebar' => 'Container width sidebar',
+        'container_no_sidebar' => 'Container no sidebar'
+      ),
+      '#maxlength' => 255,
+      '#description' => t('Change layout for path.'),
+    );
+
+    $form['gavias_blockbuilder_layout']['gva_breadcrumb'] = array(
+      '#type' => 'select',
+      '#title' => 'Breadcrumb Show',
+      '#default_value' => \Drupal::config('gavias_blockbuilder.settings')->get('gva-breadcrumb-' . $node->id()),
+      '#options'  => array(
+        'enable'    => 'Enable',
+        'disable'   => 'Disable'
+      ),
+      '#maxlength' => 255,
+    );
+
+    $form['gva_shortcode'] = array(
+      '#type' => 'details',
+      '#title' => t('Render blockbuider settings'),
+      '#group' => '',
+      '#open'   => TRUE,
+      '#attributes' => array(
+        'class' => array('gva-choose-shortcode'),
+      ),
+      '#weight' => 999,
+    );
+
+    $form['gva_shortcode']['gva_render_shortcode'] = array(
+      '#type' => 'select',
+      '#title' => 'Choose Blockbuilder <a class="gva-popup-iframe" href="'.\Drupal::url('gavias_blockbuilder.admin').'">Manage All Blockbuilders</a>',
+      '#default_value' => \Drupal::config('gva_render_shortcode.settings')->get('gva-render-shortcode-' . $node->id()),
+      '#options'  => $list_gbb,
+      '#maxlength' => 255,
+    );
+
+    $form['actions']['submit']['#submit'][] = 'gavias_blockbuilder_node_page_form_submit';
+  }
+}
+
+function gavias_blockbuilder_node_page_form_submit(array &$form, FormStateInterface &$form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+  $values = $form_state->getValues();
+  if(isset($values['gva_layout'])){
+    \Drupal::configFactory()->getEditable('gavias_blockbuilder.settings')
+      ->set('gva-layout-' . $node->id(), $values['gva_layout'])
+      ->save();
+  }
+
+  if(isset($values['gva_render_shortcode'])){
+  \Drupal::configFactory()->getEditable('gva_render_shortcode.settings')
+    ->set('gva-render-shortcode-' . $node->id(), $values['gva_render_shortcode'])
+    ->save();
+  }
+
+  if(isset($values['gva_breadcrumb'])){
+  \Drupal::configFactory()->getEditable('gavias_blockbuilder.settings')
+    ->set('gva-breadcrumb-' . $node->id(), $values['gva_breadcrumb'])
+    ->save();
+  }
+}
+
+function gavias_blockbuilder_preprocess_node(&$variables){
+  $variables['#cache'] = array('max-age' => 0);
+  $node = $variables['node'];
+  $bid = '';
+  if($node->hasField('gva_render_shortcodes')){
+    $bid = $node->get('gva_render_shortcodes')->value;
+  }
+  if(!$bid && $bid == ''){
+    $bid = \Drupal::config('gva_render_shortcode.settings')->get('gva-render-shortcode-' . $node->id());
+  }
+  $gva_content_shortcode = '';
+  if($bid && $bid != '_none'){
+    $results = gavias_blockbuilder_load($bid);
+    if(!$results) $gva_content_shortcode = t('No block builder selected');
+    
+    $user = \Drupal::currentUser();
+    $url = \Drupal::request()->getRequestUri();
+    $edit_url = '';
+    if($user->hasPermission('administer gaviasblockbuilder')){
+      $edit_url = \Drupal::url('gavias_blockbuilder.admin.edit', array('bid' => $bid, 'destination' =>  $url));
+    }
+
+    $gva_content_shortcode .= '<div class="gavias-blockbuilder-content">';
+    if($edit_url){
+      $gva_content_shortcode .= '<a class="link-edit-blockbuider" href="'. $edit_url .'"> Config block builder </a>';
+    }
+
+    $gva_content_shortcode .= gavias_blockbuilder_frontend($results->params);
+    $gva_content_shortcode .= '</div>'; 
+  }
+  
+  $variables['gva_content_shortcode'] = $gva_content_shortcode;
+  $gva_content_shortcode = null;
+
+}
+
+function gavias_blockbuilder_preprocess_page(&$variables){
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if($node && is_object($node)){
+    $breadcrumb = \Drupal::config('gavias_blockbuilder.settings')->get('gva-breadcrumb-' . $node->id());
+    if($breadcrumb == 'disable'){
+      if(isset($variables['page']['breadcrumbs'])) unset($variables['page']['breadcrumbs']);
+    }
+  }
+}
+
+function gavias_render_textarealangs($value){
+  if($value){
+    if(is_array($value)){
+      $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      if(isset($value['htmllangs']['language__' . $language]) && $value['htmllangs']['language__' . $language]){
+        return $value['htmllangs']['language__' . $language];
+      }else{
+        if(isset($value['htmllangs']['language__gvalangdefault']) && $value['htmllangs']['language__gvalangdefault']){
+          return $value['htmllangs']['language__gvalangdefault'];
+        }
+      }
+    }else{
+      return $value;
+    }
+  }
+  return '';
+}
+
+function gavias_render_textlangs($value){
+  if($value){
+    if(is_array($value)){
+      $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      if(isset($value['textlangs']['language__' . $language]) && $value['textlangs']['language__' . $language]){
+        return $value['textlangs']['language__' . $language];
+      }else{
+        if(isset($value['textlangs']['language__gvalangdefault']) && $value['textlangs']['language__gvalangdefault']){
+          return $value['textlangs']['language__gvalangdefault'];
+        }
+      }
+    }else{
+      return $value;
+    }
+  }  
+  return '';
+}
+
+function gavias_blockbuilder_update_projects_alter(&$projects){
+   unset($projects['gavias_blockbuilder']);
+}

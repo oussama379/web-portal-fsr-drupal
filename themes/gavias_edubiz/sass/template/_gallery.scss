@@ -1,0 +1,56 @@
+.gallery-post{
+   position: relative;
+   &:hover{
+      @include box-shadow(0px 4px 26px 3px rgba(213, 221, 234, 1));
+   }
+   .gva-pajax{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: $white;
+      font-size: 16px;
+      @include size(40px, 40px);
+      @include border-radius(50%);
+      background: rgba(0, 0, 0, 0.3);
+      text-align: center;
+      line-height: 40px;
+      @include transition(all 0.35s);
+      @include opacity(0);
+      z-index: 99;
+      @media(max-width: $screen-xs-max){
+         display: none;
+      }
+      &:hover, &:focus, &:active{
+         background: $theme-color;
+      }
+   }
+  .post-meta-wrap{
+      background: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      padding: 8px 15px;
+      @include opacity(0);
+      @include transition(all 0.35s);
+      .post-title{
+         line-height: 1;
+         a{
+            color: $white;
+            font-size: 16px;
+            font-family: $font-second;
+            line-height: 22px;
+            font-weight: 400;
+            display: inline-block;
+            &:hover, &:focus, &:active{
+               color: $theme-color;
+            }
+         }
+      }
+   }
+   &:hover{
+      .gva-pajax, .post-meta-wrap{
+         @include opacity(1);
+      }
+   }
+}

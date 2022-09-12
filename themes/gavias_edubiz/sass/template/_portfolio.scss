@@ -1,0 +1,101 @@
+.portfolio-filter{
+  margin-bottom: 20px;
+  margin-top: 10px;
+  text-align: center;
+  ul.nav-tabs{
+    display: inline-block;
+    > li{
+      margin-bottom: 10px;
+      > a{
+        @include box-shadow(0px 0px 4px 0px rgba(0, 0, 0, 0.2) !important);
+        font-weight: 400;
+        background: #F6F6F6;
+        font-size: 12px;
+        padding: 10px 15px;
+        @include border-radius(5px);
+        font-family: $font-second;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-right: 15px;
+        @include transition(all 0.35s);
+        color: $black!important;
+        border-color: transparent!important;
+        @include box-shadow(none);
+        background: $white!important;
+        &.active, &:hover, &:focus, &:active{
+          color: $theme-color!important;
+          border-color: $theme-color!important;
+        }
+      }
+    }
+  }
+}
+
+.portfolio-v1{
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+  &:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include size(100%, 100%); 
+    background: $black;
+    @include opacity(0);
+    z-index: 1;
+    @include transition(all 0.35s);
+  }
+  .content-inner{
+    position: absolute;
+    @include size(100%, auto);
+    left: 0;
+    bottom: -20px;
+    @include translateY(0);
+    z-index: 11;
+    @include opacity(0);
+    text-align: left;
+    @include transition(all 0.35s);
+    padding: 25px 25px 25px;
+    .title{  
+      a{
+        font-family: $font-second;
+        font-size: 18px;
+        color: $white;
+        font-weight: 400;
+        line-height: 26px;
+        &:hover, &:focus, &:active{
+          text-decoration: underline;
+        }
+      }
+    }
+    .category{
+      color: $white;
+      a{
+        color: $white;
+        font-size: 11px;
+        text-transform: uppercase;
+        &:hover, &:focus, &:active{
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  &:hover, &:active, &:focus{
+    &:after{
+      top: 0;
+      @include opacity(0.8);
+    }
+    .content-inner{
+      @include opacity(1);
+      bottom: 0;
+    }
+  }
+  ul{
+    list-style: none;
+    padding: 0;
+  }
+  &.portfolio-carousel{
+    margin-bottom: 0;
+  }
+}

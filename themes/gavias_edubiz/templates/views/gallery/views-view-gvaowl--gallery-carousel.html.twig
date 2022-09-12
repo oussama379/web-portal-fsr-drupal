@@ -1,0 +1,37 @@
+{% if attributes -%}
+   <div id="gva-images-carousel" {{ attributes.addClass('slider-gallery-v1') }}>
+{% endif %}
+
+   {% set i = 0 %}
+   {% for row in rows %}
+      {% set i = i + 1 %}
+      {% if i % 5 == 1 %}
+         <div class="gallery-large carousel-item">
+            <div class="item content">{{ row.content }}</div>
+         </div>
+      {% else %}
+         
+         {% if i % 5 == 2 %}
+            <div class="galery-small-wrap">
+         {% endif %}   
+         
+            {% if i % 5 == 2 or i % 5 == 4 %}
+              <div class="gallery-small carousel-item">
+            {% endif %}
+               <div class="item content gallery-small-item">{{ row.content }}</div>
+            {% if i % 5 == 3 or i % 5 == 0 or i == rows|length %}
+               </div>
+            {% endif %}   
+
+         {% if i % 5 == 0 or i == rows|length %}
+            </div>
+         {% endif %}    
+            
+      {% endif %} 
+   {% endfor %} 
+
+{% if attributes -%}
+    </div>
+{% endif %}
+
+

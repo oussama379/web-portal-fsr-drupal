@@ -1,0 +1,36 @@
+id: d7_simplenews_subscriber
+dependencies:
+  config:
+    - migrate.migration.d7_simplenews_newsletter
+  module:
+    - migrate_drupal
+    - simplenews
+label: Simplenews subscribers
+migration_tags:
+  - Drupal 7
+source:
+  plugin: simplenews_subscriber
+process:
+  id: snid
+  status: activated
+  mail: mail
+  uid: uid
+  langcode: language
+  changes: changes
+  created: created
+  subscriptions:
+    plugin: iterator
+    source: subscriptions
+    process:
+      target_id:
+        plugin: migration
+        migration: d7_simplenews_newsletter
+        source: newsletter_id
+      status: status
+      timestamp: timestamp
+      source: source
+destination:
+  plugin: entity:simplenews_subscriber
+migration_dependencies:
+  required:
+    - d7_simplenews_newsletter
